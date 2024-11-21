@@ -21,9 +21,6 @@ public static class DependencyInjection
         services.AddRepositories();
         services.AddDatabase(configuration);
         services.AddMapping();
-        services.AddValidation();
-        services.AddServices();
-        services.ConfigureJwt(configuration);
         return services;
     }
 
