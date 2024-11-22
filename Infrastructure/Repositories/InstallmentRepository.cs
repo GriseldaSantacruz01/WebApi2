@@ -23,7 +23,7 @@ namespace Infrastructure.Repositories
 
         public async Task<SimulateInstallmentResponse> CreateInstallment(SimulateInstallment simulateInstallment)
         {
-            var entity = simulateInstallment.Adapt<SimulateInstallmentDTO>();
+            var entity = simulateInstallment.Adapt<SimulateInstallmentDTO>();//revisado
             return entity.Adapt<SimulateInstallmentResponse>();
         }
 
