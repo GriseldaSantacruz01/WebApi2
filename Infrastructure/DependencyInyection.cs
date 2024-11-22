@@ -27,19 +27,18 @@ public static class DependencyInjection
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<ICustomerRepository, CustomerRepository>();
-        services.AddScoped<IFeeRepository, FeeRepository>();
+        services.AddScoped<IInstallmentRepository, InstallmentRepository>();
         services.AddScoped<IApprovedLoan, ApprovedLoanRepository>();
         services.AddScoped<ILoanRequestRepository, LoanRequestRepository>();
+        services.AddScoped<IPaymentInstallmentRepository, PaymentInstallmentRepository>();
 
         return services;
     }
-    public static IServiceCollection AddDatabase(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddDatabase(this IServiceCollection services,IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("Bootcamp");
 
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContext<AplicationDbContext>(options =>
         {
             options.UseNpgsql(connectionString);
         });

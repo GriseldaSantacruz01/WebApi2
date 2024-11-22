@@ -4,7 +4,7 @@ public class TermIR
 {
     public int TermId { get; set; }
     public int Months { get; set; }
-    public decimal InterestRate { get; set; }
-    public List<Fee> Fees { get; set; } = null!;
-
+    public float InterestRate { get; set; }
+    public ApprovedLoan ApprovedLoan { get; set; } = null!;
+    public LoanRequest LoanRequest { get; set; } = null!;
 }

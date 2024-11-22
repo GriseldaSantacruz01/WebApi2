@@ -5,9 +5,9 @@ namespace Infrastructure.Repositories;
 
 public class LoanRequestRepository : ILoanRequestRepository
 {
-    private readonly ApplicationDbContext _context;
+    private readonly AplicationDbContext _context;
 
-    public LoanRequestRepository(ApplicationDbContext context)
+    public LoanRequestRepository(AplicationDbContext context)
     {
         _context = context;
     }

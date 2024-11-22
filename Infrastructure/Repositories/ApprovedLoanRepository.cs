@@ -5,9 +5,9 @@ namespace Infrastructure.Repositories;
 
 public class ApprovedLoanRepository : IApprovedLoan
 {
-    private readonly ApplicationDbContext _context;
+    private readonly AplicationDbContext _context;
 
-    public ApprovedLoanRepository(ApplicationDbContext context)
+    public ApprovedLoanRepository(AplicationDbContext context)
     {
         _context = context;
     }

@@ -21,12 +21,6 @@ namespace Infrastructure.Configurations
                 .WithOne(x => x.Loan)
                 .HasForeignKey<LoanRequest>(x => x.ApprovedLoanId);
             entity
-                .HasOne(x => x.Fee)
-                .WithOne(x => x.Loan)
-                .HasForeignKey<LoanRequest>(x => x.FeedId);
-            entity.Property(x => x.Type)
-                .IsRequired();
-            entity
                 .HasOne(x => x.Customer)
                 .WithMany(x => x.Loans)
                 .HasForeignKey(x => x.CustomerId);
