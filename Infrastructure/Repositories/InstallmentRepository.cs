@@ -35,6 +35,7 @@ namespace Infrastructure.Repositories
                 TotalAmount = _termService.CalculateInstallmentAmount(entity.InterestRate, simulateInstallment.Amount, simulateInstallment.Months) * simulateInstallment.Months,
             };
 
+
             return installment;
         }
 
