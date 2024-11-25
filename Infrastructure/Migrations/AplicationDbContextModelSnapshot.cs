@@ -30,23 +30,14 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ApprovedLoanId"));
 
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
                     b.Property<DateTime>("ApprovalDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<decimal>("CapitalAmount")
-                        .HasColumnType("numeric");
-
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("InstallamentId")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("InterestAmount")
-                        .HasColumnType("real");
 
                     b.Property<float>("InterestRate")
                         .HasColumnType("real");
@@ -54,23 +45,18 @@ namespace Infrastructure.Migrations
                     b.Property<int>("LoanId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("NextDueDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("TermId")
+                    b.Property<int>("Months")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("TotalFeeAmount")
-                        .HasColumnType("numeric");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("ApprovedLoanId");
 
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("LoanId")
-                        .IsUnique();
-
-                    b.HasIndex("TermId")
                         .IsUnique();
 
                     b.ToTable("ApprovedLoans");
@@ -105,23 +91,26 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("InstallmentId"));
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
-
                     b.Property<int>("ApprovedLoanId")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("InstallmentAmount")
+                    b.Property<decimal>("CapitalAmount")
                         .HasColumnType("numeric");
 
-                    b.Property<int>("InstallmentDue")
-                        .HasColumnType("integer");
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("InstallmentStatus")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("TermId")
+                    b.Property<decimal>("InstallmentTotal")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("InterestAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("RemainingInstallment")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("TotalAmount")
@@ -131,8 +120,6 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ApprovedLoanId")
                         .IsUnique();
-
-                    b.HasIndex("TermId");
 
                     b.ToTable("Installments");
                 });
@@ -148,21 +135,18 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<int>("ApprovedLoanId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Months")
                         .HasColumnType("integer");
 
+                    b.Property<string>("RejectionReason")
+                        .HasColumnType("text");
+
                     b.Property<string>("RequestStatus")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("TermId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -172,8 +156,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("TermId")
-                        .IsUnique();
+                    b.HasIndex("Months");
 
                     b.ToTable("LoanRequests");
                 });
@@ -239,17 +222,9 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Entities.TermIR", "Term")
-                        .WithOne("ApprovedLoan")
-                        .HasForeignKey("Core.Entities.ApprovedLoan", "TermId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Customer");
 
                     b.Navigation("Loan");
-
-                    b.Navigation("Term");
                 });
 
             modelBuilder.Entity("Core.Entities.Installment", b =>
@@ -260,15 +235,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Entities.TermIR", "Term")
-                        .WithMany()
-                        .HasForeignKey("TermId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ApprovedLoan");
-
-                    b.Navigation("Term");
                 });
 
             modelBuilder.Entity("Core.Entities.LoanRequest", b =>
@@ -280,8 +247,9 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Core.Entities.TermIR", "Term")
-                        .WithOne("LoanRequest")
-                        .HasForeignKey("Core.Entities.LoanRequest", "TermId")
+                        .WithMany("LoanRequests")
+                        .HasForeignKey("Months")
+                        .HasPrincipalKey("Months")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -326,11 +294,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Entities.TermIR", b =>
                 {
-                    b.Navigation("ApprovedLoan")
-                        .IsRequired();
-
-                    b.Navigation("LoanRequest")
-                        .IsRequired();
+                    b.Navigation("LoanRequests");
                 });
 #pragma warning restore 612, 618
         }

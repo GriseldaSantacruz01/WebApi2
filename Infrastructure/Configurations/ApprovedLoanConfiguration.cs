@@ -15,10 +15,7 @@ namespace Infrastructure.Configurations
                 .HasForeignKey<ApprovedLoan>(x => x.LoanId);
             entity.Property(x => x.InterestRate)
                 .IsRequired();
-            entity
-                .HasOne(x => x.Term)
-                .WithOne(x => x.ApprovedLoan)
-                .HasForeignKey<ApprovedLoan>(x => x.TermId);
+            
         }
     }
 }

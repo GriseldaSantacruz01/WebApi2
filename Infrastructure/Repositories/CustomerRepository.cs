@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Repositories;
+﻿using Core.Entities;
+using Core.Interfaces.Repositories;
 using Infrastructure.Contexts;
 
 namespace Infrastructure.Repositories
@@ -11,5 +12,11 @@ namespace Infrastructure.Repositories
         {
             _context = context;
         }
+
+        public async Task<Customer> GetById (int id)
+        {
+            var customer = await _context.Customers.FindAsync(id);
+            return customer!;
+        } 
     }
 }

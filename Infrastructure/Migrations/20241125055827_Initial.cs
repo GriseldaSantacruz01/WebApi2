@@ -38,6 +38,7 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TermIRs", x => x.TermId);
+                    table.UniqueConstraint("AK_TermIRs_Months", x => x.Months);
                 });
 
             migrationBuilder.CreateTable(
@@ -47,12 +48,11 @@ namespace Infrastructure.Migrations
                     LoanId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CustomerId = table.Column<int>(type: "integer", nullable: false),
-                    TermId = table.Column<int>(type: "integer", nullable: false),
                     Months = table.Column<int>(type: "integer", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Type = table.Column<string>(type: "text", nullable: false),
-                    RequestStatus = table.Column<string>(type: "text", nullable: false),
-                    ApprovedLoanId = table.Column<int>(type: "integer", nullable: false)
+                    RejectionReason = table.Column<string>(type: "text", nullable: true),
+                    RequestStatus = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,10 +64,10 @@ namespace Infrastructure.Migrations
                         principalColumn: "CustomerId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_LoanRequests_TermIRs_TermId",
-                        column: x => x.TermId,
+                        name: "FK_LoanRequests_TermIRs_Months",
+                        column: x => x.Months,
                         principalTable: "TermIRs",
-                        principalColumn: "TermId",
+                        principalColumn: "Months",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -77,17 +77,13 @@ namespace Infrastructure.Migrations
                 {
                     ApprovedLoanId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CustomerId = table.Column<int>(type: "integer", nullable: false),
+                    InterestRate = table.Column<float>(type: "real", nullable: false),
+                    Months = table.Column<int>(type: "integer", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    Type = table.Column<string>(type: "text", nullable: false),
                     ApprovalDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    InstallamentId = table.Column<int>(type: "integer", nullable: false),
-                    LoanId = table.Column<int>(type: "integer", nullable: false),
-                    TermId = table.Column<int>(type: "integer", nullable: false),
-                    ExpirationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    NextDueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    TotalFeeAmount = table.Column<decimal>(type: "numeric", nullable: false),
-                    CapitalAmount = table.Column<decimal>(type: "numeric", nullable: false),
-                    InterestAmount = table.Column<float>(type: "real", nullable: false),
-                    InterestRate = table.Column<float>(type: "real", nullable: false)
+                    CustomerId = table.Column<int>(type: "integer", nullable: false),
+                    LoanId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -104,12 +100,6 @@ namespace Infrastructure.Migrations
                         principalTable: "LoanRequests",
                         principalColumn: "LoanId",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ApprovedLoans_TermIRs_TermId",
-                        column: x => x.TermId,
-                        principalTable: "TermIRs",
-                        principalColumn: "TermId",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -118,13 +108,14 @@ namespace Infrastructure.Migrations
                 {
                     InstallmentId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ApprovedLoanId = table.Column<int>(type: "integer", nullable: false),
-                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    TermId = table.Column<int>(type: "integer", nullable: false),
+                    CapitalAmount = table.Column<decimal>(type: "numeric", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "numeric", nullable: false),
-                    InstallmentAmount = table.Column<decimal>(type: "numeric", nullable: false),
+                    InstallmentTotal = table.Column<decimal>(type: "numeric", nullable: false),
+                    InterestAmount = table.Column<decimal>(type: "numeric", nullable: false),
                     InstallmentStatus = table.Column<string>(type: "text", nullable: false),
-                    InstallmentDue = table.Column<int>(type: "integer", nullable: false)
+                    RemainingInstallment = table.Column<int>(type: "integer", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ApprovedLoanId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -134,12 +125,6 @@ namespace Infrastructure.Migrations
                         column: x => x.ApprovedLoanId,
                         principalTable: "ApprovedLoans",
                         principalColumn: "ApprovedLoanId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Installments_TermIRs_TermId",
-                        column: x => x.TermId,
-                        principalTable: "TermIRs",
-                        principalColumn: "TermId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -177,21 +162,10 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApprovedLoans_TermId",
-                table: "ApprovedLoans",
-                column: "TermId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Installments_ApprovedLoanId",
                 table: "Installments",
                 column: "ApprovedLoanId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Installments_TermId",
-                table: "Installments",
-                column: "TermId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LoanRequests_CustomerId",
@@ -199,10 +173,9 @@ namespace Infrastructure.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LoanRequests_TermId",
+                name: "IX_LoanRequests_Months",
                 table: "LoanRequests",
-                column: "TermId",
-                unique: true);
+                column: "Months");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentInstallments_InstallmentId",
