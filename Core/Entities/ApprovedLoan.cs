@@ -10,7 +10,7 @@
         public DateTime ApprovalDate { get; set; } 
         public Customer Customer { get; set; } = null!;
         public int CustomerId { get; set; }
-        public Installment Installament { get; set; } = null!;
+        public List<Installment> Installaments { get; set; } = null!;
         public LoanRequest Loan { get; set; } = null!;
         public int LoanId { get; set; }
     }

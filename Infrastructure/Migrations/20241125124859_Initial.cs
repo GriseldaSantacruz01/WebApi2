@@ -113,8 +113,8 @@ namespace Infrastructure.Migrations
                     InstallmentTotal = table.Column<decimal>(type: "numeric", nullable: false),
                     InterestAmount = table.Column<decimal>(type: "numeric", nullable: false),
                     InstallmentStatus = table.Column<string>(type: "text", nullable: false),
-                    RemainingInstallment = table.Column<int>(type: "integer", nullable: false),
                     DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ApprovedLoanId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -164,8 +164,7 @@ namespace Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Installments_ApprovedLoanId",
                 table: "Installments",
-                column: "ApprovedLoanId",
-                unique: true);
+                column: "ApprovedLoanId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LoanRequests_CustomerId",

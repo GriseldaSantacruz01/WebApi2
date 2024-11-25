@@ -16,6 +16,7 @@ namespace Core.Interfaces.Repositories
         Task<Customer> VerifyCustomer(int customerId);
         Task<LoanRequest> VerifyId(int loanId);
         Task<TermIR> VerifyMonths(int months);
+        
 
 
     }

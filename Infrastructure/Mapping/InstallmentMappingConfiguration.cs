@@ -16,10 +16,10 @@ namespace Infrastructure.Mapping
                 .Map(dest => dest.CapitalAmount, src => src.Amount)
                 .Map(dest => dest.InterestAmount, src => 0)
                 .Map(dest => dest.InstallmentTotal, src => 0)
-                .Map(dest => dest.RemainingInstallment, src => src.Months)
-                .Map(dest => dest.DueDate, src => DateTime.UtcNow)
-                .Map(dest => dest.InstallmentStatus, src => $"Hay cuotas pendientes");
-            
+                .Map(dest => dest.DueDate, src => DateTime.UtcNow);
+            config.NewConfig<Installment, SimulateInstallmentResponse>()
+                .Map(dest => dest.InstallmentAmount, src => 0)
+                .Map(dest => dest.TotalAmount, src => 0);
 
 
 

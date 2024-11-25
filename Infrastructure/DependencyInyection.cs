@@ -48,10 +48,14 @@ public static class DependencyInjection
 
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddScoped<ITermService, TermService>();
+        services.AddScoped<IGeneralService, GeneralService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IInstallmentService, InstallmentService>();
         services.AddScoped<ILoanRequestService, LoanRequestService>();
+        services.AddScoped<IGeneralService, GeneralService>();
+        services.AddScoped<IResponseService, ResponseService>();
+        services.AddScoped<IApprovedLoanService, ApprovedLoanService>();
+       
 
         return services;
     }

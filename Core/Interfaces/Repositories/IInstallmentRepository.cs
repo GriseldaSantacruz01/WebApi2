@@ -10,10 +10,9 @@ namespace Core.Interfaces.Repositories
 {
     public interface IInstallmentRepository
     {
-        Task<SimulateInstallmentResponse> CreateInstallment(SimulateInstallment simulateInstallment);
+        Task CreateInstallment(SimulateInstallment simulateInstallment);
         Task<TermIR> VerifyMonths(int months);
         Task AddAsync(Installment installment);
-        Task<Installment> GetInstallment(int id);
-
+        Task<List<Installment>> GetInstallments(int loanId);
     }
 }

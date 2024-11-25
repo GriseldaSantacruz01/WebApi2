@@ -16,27 +16,19 @@ namespace Infrastructure.Repositories
     public class InstallmentRepository : IInstallmentRepository
     {
         private readonly AplicationDbContext _context;
-        private readonly ITermService _termService;
+        private readonly IGeneralService _termService;
         
 
-        public InstallmentRepository(AplicationDbContext context, ITermService termService)
+        public InstallmentRepository(AplicationDbContext context, IGeneralService termService)
         {
             _context = context;
             _termService = termService;
         }
 
-        public async Task<SimulateInstallmentResponse> CreateInstallment(SimulateInstallment simulateInstallment)
+        public async Task CreateInstallment(SimulateInstallment simulateInstallment)
         {
             var entity = await _context.TermIRs.FirstOrDefaultAsync(x => x.Months == simulateInstallment.Months);
 
-            var installment = new SimulateInstallmentResponse
-            {
-                InstallmentAmount = _termService.CalculateInstallmentAmount(entity!.InterestRate, simulateInstallment.Amount, simulateInstallment.Months),
-                TotalAmount = _termService.CalculateInstallmentAmount(entity.InterestRate, simulateInstallment.Amount, simulateInstallment.Months) * simulateInstallment.Months,
-            };
-
-
-            return installment;
         }
 
         public async Task AddAsync(Installment installment)
@@ -51,11 +43,15 @@ namespace Infrastructure.Repositories
             return entity!;
         }
 
-        public async Task<Installment> GetInstallment(int id)
+        public async Task<List<Installment>> GetInstallments(int loanId)
         {
-            var installment = await _context.Installments.FirstOrDefaultAsync(x => x.ApprovedLoanId == id);
-            return installment!;
+            return await _context.Installments
+                .Where(i => i.ApprovedLoanId == loanId)
+                .OrderBy(i => i.DueDate) 
+                .ToListAsync();
         }
+
+        
 
 
     }

@@ -1,5 +1,9 @@
 ﻿using Core.DTOs.LoanRequest;
+using Core.Entities;
 using Core.Interfaces.Repositories;
+using Core.Interfaces.Service;
+using Infrastructure.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Controllers;
 
@@ -7,11 +11,23 @@ namespace WebApi2.Controllers
 {
     public class ApprovedLoanController : BaseApiController
     {
-        private readonly IApprovedLoanRepository _approvedLoan;
-        public ApprovedLoanController(IApprovedLoanRepository approvedLoan)
+        private readonly IApprovedLoanService _approvedLoanService;
+        private readonly IResponseService _responseService;
+        public ApprovedLoanController(IApprovedLoanService approvedLoanService, IResponseService responseService)
         {
-            _approvedLoan = approvedLoan;
+            _approvedLoanService = approvedLoanService;
+            _responseService = responseService;
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("/{loanId}")]
+        public async Task<IActionResult> GetLoanDetailed([FromRoute]int loanId)
+        {
+            var loanApproved = await _responseService.VerifyLoanApprovedId(loanId);
+            if (loanApproved.Code == -1) return NotFound(loanApproved.Message);
+            return Ok(await _approvedLoanService.GetLoanById(loanId));
+        }
+
 
         
     }

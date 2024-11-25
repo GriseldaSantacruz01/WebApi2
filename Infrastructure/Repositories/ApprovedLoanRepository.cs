@@ -25,7 +25,7 @@ public class ApprovedLoanRepository : IApprovedLoanRepository
 
     public async Task<ApprovedLoan> GetLoanById(int id)
     {
-        var loan = await _context.ApprovedLoans.FindAsync(id);
+        var loan = await _context.ApprovedLoans.FirstOrDefaultAsync(x => x.ApprovedLoanId == id);
         return loan! ;
     }
 

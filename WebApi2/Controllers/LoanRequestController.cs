@@ -11,11 +11,11 @@ namespace WebApi2.Controllers
 {
     public class LoanRequestController : BaseApiController
     {
-        private readonly ILoanRequestRepository _loanRequestRepository;
+        private readonly IResponseService _responseService;
         private readonly ILoanRequestService _loanRequestService;
-        public LoanRequestController(ILoanRequestRepository loanRequestRepository, ILoanRequestService loanRequestService)
+        public LoanRequestController(ILoanRequestService loanRequestService, IResponseService responseService)
         {
-            _loanRequestRepository = loanRequestRepository;
+            _responseService = responseService;
             _loanRequestService = loanRequestService;
         }
 
@@ -23,8 +23,8 @@ namespace WebApi2.Controllers
         [HttpPost("/{customerId}")]
         public async Task<IActionResult> CreateLoanRequest([FromBody]CreateLoanRequest createLoanRequest, int customerId)
         {
-           var customer = await _loanRequestService.VerifyCustomer(customerId);
-           var months = await _loanRequestService.VerifyMonths(createLoanRequest.Months);
+           var customer = await _responseService.VerifyCustomer(customerId);
+           var months = await _responseService.VerifyMonths(createLoanRequest.Months);
            if (months.Code == -1 || customer.Code == -1)
             {
                 return NotFound(months.Message + " y " + customer.Message);
@@ -34,26 +34,28 @@ namespace WebApi2.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("/ApprovalOrRejection/{loanId}")]
+        [HttpPost("/Approval/{loanId}")]
 
-        public async Task<IActionResult> HandleApprovalOrRejectionAsync(RequestResponse loanRequest)
+        public async Task<IActionResult> AproveLoan(int loanId, float interestRate)
         {
-            var loan = await _loanRequestService.VerifyId(loanRequest.LoanId);
+            var loan = await _responseService.VerifyLoanId(loanId);
             if (loan.Code == -1) return NotFound(loan.Message);
-            if (!loanRequest.Approve && string.IsNullOrEmpty(loanRequest.Reason) && loanRequest.InterestRate != 0) 
-            { 
-                return BadRequest("Si un prestamo es rechazado se necesita un motivo pero no una tasa de interes"); 
 
-            }
-            else
-            {
-                if (loanRequest.Approve && loanRequest.InterestRate == 0) return BadRequest("Si es aprobado no necesita un motivo pero si una tasa de interes"); 
-            }
-            
-            return Ok(await _loanRequestService.HandleApprovalOrRejectionAsync(loanRequest));
+
+            return Ok(await _loanRequestService.AproveLoan(loanId, interestRate));
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPost("/Rejection/{loanId}")]
 
+        public async Task<IActionResult> RejectedLoan(int loanId, string reason)
+        {
+            var loan = await _responseService.VerifyLoanId(loanId);
+            if (loan.Code == -1) return NotFound(loan.Message);
+
+
+            return Ok(await _loanRequestService.RejectedLoan(loanId, reason));
+        }
 
     }
 }

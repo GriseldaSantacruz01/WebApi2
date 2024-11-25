@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    [Migration("20241125055827_Initial")]
-    partial class Initial
+    [Migration("20241125132804_DefaultValueNullPaymentDate")]
+    partial class DefaultValueNullPaymentDate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -113,16 +113,15 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("InterestAmount")
                         .HasColumnType("numeric");
 
-                    b.Property<int>("RemainingInstallment")
-                        .HasColumnType("integer");
+                    b.Property<DateTime?>("PaymentDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("numeric");
 
                     b.HasKey("InstallmentId");
 
-                    b.HasIndex("ApprovedLoanId")
-                        .IsUnique();
+                    b.HasIndex("ApprovedLoanId");
 
                     b.ToTable("Installments");
                 });
@@ -233,8 +232,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entities.Installment", b =>
                 {
                     b.HasOne("Core.Entities.ApprovedLoan", "ApprovedLoan")
-                        .WithOne("Installament")
-                        .HasForeignKey("Core.Entities.Installment", "ApprovedLoanId")
+                        .WithMany("Installaments")
+                        .HasForeignKey("ApprovedLoanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -274,8 +273,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Entities.ApprovedLoan", b =>
                 {
-                    b.Navigation("Installament")
-                        .IsRequired();
+                    b.Navigation("Installaments");
                 });
 
             modelBuilder.Entity("Core.Entities.Customer", b =>

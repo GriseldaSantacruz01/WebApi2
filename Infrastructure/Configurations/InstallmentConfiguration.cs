@@ -13,8 +13,11 @@ public class InstallmentConfiguration : IEntityTypeConfiguration<Installment>
         entity.HasKey(x => x.InstallmentId);
         entity
             .HasOne(x => x.ApprovedLoan)
-            .WithOne(X => X.Installament)
-            .HasForeignKey<Installment>(x => x.ApprovedLoanId);
+            .WithMany(X => X.Installaments)
+            .HasForeignKey(x => x.ApprovedLoanId);
+        entity.Property(x => x.PaymentDate)
+            .IsRequired(false)
+            .HasDefaultValue(null);
         
         
             

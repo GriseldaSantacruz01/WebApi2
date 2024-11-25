@@ -5,10 +5,9 @@ namespace Core.Interfaces.Service
 {
     public interface ILoanRequestService
     {
-        Task<Response> VerifyMonths(int months);
-        Task<Response> VerifyCustomer(int customerId);
-        Task<Response> VerifyId(int loanId);
+        
         Task<string> CreateLoanRequest(CreateLoanRequest createLoanRequest, int customerId);
-        Task<string> HandleApprovalOrRejectionAsync(RequestResponse request);
+        Task<string> RejectedLoan(int loanId, string reason);
+        Task<string> AproveLoan(int loanId, float interestRate);
     }
 }

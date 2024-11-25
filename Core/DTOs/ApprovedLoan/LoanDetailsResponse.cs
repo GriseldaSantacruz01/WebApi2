@@ -6,8 +6,6 @@ namespace Core.DTOs.ApprovedLoan
     {
         public int CustomerId { get; set; }
         public string CustomerName { get; set; } = string.Empty;
-        public Customer Customer { get; set; } = null!;
-        public DateTime ApprovalDate { get; set; }
         public decimal Amount { get; set; }
         public decimal TotalAmount { get; set; }
         public decimal Profit { get; set; }
@@ -16,9 +14,8 @@ namespace Core.DTOs.ApprovedLoan
         public float InterestRate { get; set; }
         public int PaidInstallments { get; set; }
         public int PendingInstallments { get; set; }
-        public DateTime NextDueDate { get; set; }
+        public string NextDueDate { get; set; } = string.Empty;
 
-        public Installment Installment { get; set; } = null!;
 
 
 
