@@ -3,6 +3,7 @@ using Core.Entities;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Service;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Service;
 
@@ -12,7 +13,10 @@ public class InstallmentService : IInstallmentService
     private readonly ILoanRequestRepository _loanRequestRepository;
     private readonly IGeneralService _generalService;
 
-    public InstallmentService(IInstallmentRepository installmentRepository, ILoanRequestRepository loanRequestRepository, IGeneralService generalService)
+    public InstallmentService
+        (IInstallmentRepository installmentRepository,
+        ILoanRequestRepository loanRequestRepository,
+        IGeneralService generalService)
     {
         _installmentRepository = installmentRepository;
         _loanRequestRepository = loanRequestRepository;
@@ -59,5 +63,14 @@ public class InstallmentService : IInstallmentService
         return await _installmentRepository.GetInstallments(id);
     }
 
-    
+    public async Task<List<PastDueInstallmentResponse>> DelayInstallmentList(int approvedLoanId)
+    {
+        var installments = await _installmentRepository.GetDelayedInstallmentsWithLoanAndCustomer(approvedLoanId);
+
+        var result = installments.Adapt<List<PastDueInstallmentResponse>>();
+
+        return result;
+
+    }
+
 }

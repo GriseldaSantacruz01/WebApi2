@@ -25,6 +25,7 @@ namespace Infrastructure.Repositories
             _termService = termService;
         }
 
+
        
 
         public async Task UpdateAsync(List<Installment> installments)
@@ -59,7 +60,16 @@ namespace Infrastructure.Repositories
                 .OrderBy(i => i.DueDate)
                 .ToListAsync();
         }
-        
+
+        public async Task<List<Installment>> GetDelayedInstallmentsWithLoanAndCustomer(int approvedLoanId)
+        {
+            return await _context.Installments
+                .Where(i => i.ApprovedLoanId == approvedLoanId && i.DueDate < DateTime.UtcNow && !i.PaymentDate.HasValue)
+                .Include(i => i.ApprovedLoan)
+                .ThenInclude(al => al.Customer)
+                .ToListAsync();
+        }
+
 
     }
 }

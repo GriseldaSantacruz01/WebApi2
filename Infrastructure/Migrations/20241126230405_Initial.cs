@@ -80,6 +80,7 @@ namespace Infrastructure.Migrations
                     InterestRate = table.Column<float>(type: "real", nullable: false),
                     Months = table.Column<int>(type: "integer", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    AmountDue = table.Column<decimal>(type: "numeric", nullable: false),
                     Type = table.Column<string>(type: "text", nullable: false),
                     ApprovalDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CustomerId = table.Column<int>(type: "integer", nullable: false),
@@ -114,7 +115,7 @@ namespace Infrastructure.Migrations
                     InterestAmount = table.Column<decimal>(type: "numeric", nullable: false),
                     InstallmentStatus = table.Column<string>(type: "text", nullable: false),
                     DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     ApprovedLoanId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -134,10 +135,10 @@ namespace Infrastructure.Migrations
                 {
                     PaymentInstallmentId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    InstallamentsToPay = table.Column<int>(type: "integer", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     NextDueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    InstallmentId = table.Column<int>(type: "integer", nullable: false)
+                    InstallmentId = table.Column<int>(type: "integer", nullable: false),
+                    InstallmentAmount = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {

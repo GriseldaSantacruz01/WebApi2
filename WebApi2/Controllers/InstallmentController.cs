@@ -35,5 +35,13 @@ namespace WebApi2.Controllers
             var installments = await _installamentService.FilterByStatus(approvedLoanId, filter);
             return Ok(installments);
         }
+
+        [HttpGet("/GetDelayedInstallments/{approvedLoanId}")]
+        public async Task<IActionResult> DelayInstallmentList(int approvedLoanId)
+        {
+            var verify = await _responseService.VerifyLoanApprovedId(approvedLoanId);
+            if (verify.Code == -1) return NotFound(verify.Message);
+            return Ok(await _installamentService.DelayInstallmentList(approvedLoanId));
+        }
     }
 }

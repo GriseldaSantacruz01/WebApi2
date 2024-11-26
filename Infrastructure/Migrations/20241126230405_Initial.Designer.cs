@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    [Migration("20241126125927_NewColumnOfPayments")]
-    partial class NewColumnOfPayments
+    [Migration("20241126230405_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,9 @@ namespace Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ApprovedLoanId"));
 
                     b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("AmountDue")
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("ApprovalDate")

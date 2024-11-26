@@ -24,7 +24,8 @@ public class LoanRequestRepository : ILoanRequestRepository
 
     public async Task<LoanRequest> GetByIdAsync(int id)
     {
-        return await _context.LoanRequests.FindAsync(id);
+        var loan = await _context.LoanRequests.FindAsync(id);
+        return loan!;
     }
 
     public async Task UpdateAsync(LoanRequest loanRequest)
