@@ -14,29 +14,35 @@ public class LoanRequestService : ILoanRequestService
     private readonly ILoanRequestRepository _loanRequestRepository;
     private readonly IApprovedLoanRepository _approvedLoanRepository;
     private readonly IInstallmentRepository _installmentRepository;
-    private readonly IGeneralService _termService;
+    private readonly IGeneralService _generalService;
+    private readonly ICustomerRepository _customerRepository;
 
     public LoanRequestService(
         ILoanRequestRepository loanRequestRepository,
         IApprovedLoanRepository approvedLoanRepository,
         IInstallmentRepository installmentRepository,
-        IGeneralService termService)
+        IGeneralService generalService,
+        ICustomerRepository customerRepository)
     {
         _loanRequestRepository = loanRequestRepository;
         _approvedLoanRepository = approvedLoanRepository;
         _installmentRepository = installmentRepository;
-        _termService = termService;
+        _generalService = generalService;
+        _customerRepository = customerRepository;
+
     }
-
-
-
-
-
-
-
-    public async Task<string> CreateLoanRequest(CreateLoanRequest createLoanRequest, int customerId)
+    public async Task<string> CreateLoanRequest(CreateLoanRequest createLoanRequest)
     {
-        return await _loanRequestRepository.CreateLoanRequest(createLoanRequest, customerId);
+        var existingTerm = await _loanRequestRepository.VerifyMonths(createLoanRequest.Months);
+        var existingCustomer = await _customerRepository.GetById(createLoanRequest.CustomerId);
+
+        var entity = createLoanRequest.Adapt<LoanRequest>();
+        entity.Term = existingTerm!;
+        entity.Customer = existingCustomer!;
+
+        await _loanRequestRepository.AddAsync(entity);
+        return $"La solicitud de préstamo está siendo procesada. El Id de la solicitud es {entity.LoanId}";
+
     }
 
     public async Task<string> RejectedLoan(int loanId, string reason)
@@ -59,8 +65,9 @@ public class LoanRequestService : ILoanRequestService
 
         var approvedLoan = loanRequest.Adapt<ApprovedLoan>();
         approvedLoan.InterestRate = interestRate;
+        approvedLoan.AmountDue = Math.Round(_generalService.CalculateTotalAmount(interestRate, approvedLoan.Amount, approvedLoan.Months));
 
-        var installments = _termService.GenerateInstallments(approvedLoan.ApprovalDate, approvedLoan.Amount, approvedLoan.InterestRate, approvedLoan.Months);
+        var installments = _generalService.GenerateInstallments(approvedLoan.ApprovalDate, approvedLoan.Amount, approvedLoan.InterestRate, approvedLoan.Months);
         await _approvedLoanRepository.AddAsync(approvedLoan);
 
         foreach (var installment in installments)

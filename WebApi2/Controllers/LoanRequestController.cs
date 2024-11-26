@@ -20,17 +20,17 @@ namespace WebApi2.Controllers
         }
 
 
-        [HttpPost("/{customerId}")]
-        public async Task<IActionResult> CreateLoanRequest([FromBody]CreateLoanRequest createLoanRequest, int customerId)
+        [HttpPost]
+        public async Task<IActionResult> CreateLoanRequest([FromBody]CreateLoanRequest createLoanRequest)
         {
-           var customer = await _responseService.VerifyCustomer(customerId);
+           var customer = await _responseService.VerifyCustomer(createLoanRequest.CustomerId);
            var months = await _responseService.VerifyMonths(createLoanRequest.Months);
            if (months.Code == -1 || customer.Code == -1)
             {
                 return NotFound(months.Message + " y " + customer.Message);
             }
 
-            return Ok( await _loanRequestService.CreateLoanRequest(createLoanRequest, customerId));
+            return Ok( await _loanRequestService.CreateLoanRequest(createLoanRequest));
         }
 
         [Authorize(Roles = "Admin")]

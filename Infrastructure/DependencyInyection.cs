@@ -55,8 +55,7 @@ public static class DependencyInjection
         services.AddScoped<IGeneralService, GeneralService>();
         services.AddScoped<IResponseService, ResponseService>();
         services.AddScoped<IApprovedLoanService, ApprovedLoanService>();
-       
-
+        services.AddScoped<IPaymentService, PaymentService>();
         return services;
     }
     public static IServiceCollection AddDatabase(this IServiceCollection services,IConfiguration configuration)

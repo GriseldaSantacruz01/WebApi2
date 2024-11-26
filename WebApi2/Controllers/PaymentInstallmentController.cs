@@ -17,14 +17,13 @@ namespace WebApi2.Controllers
         }
 
         [HttpPost("pay-installments")]
-        [Authorize]
-        public async Task<IActionResult> PayInstallments([FromBody] PaymentaReques request)
+        public async Task<IActionResult> PayInstallments([FromBody] PaymentRequest request)
         {
-            var result = await _paymentInstallamenService.PayInstallmentsAsync(request.LoanApprovedId, request.InstallmentIds);
+            var result = await _paymentInstallamenService.PayInstallmentsAsync(request.ApprovedLoanId, request.InstallmentIds);
 
             if (result.StartsWith("Error"))
             {
-                return BadRequest(result);
+                return NotFound(result);
             }
 
             return Ok(result);

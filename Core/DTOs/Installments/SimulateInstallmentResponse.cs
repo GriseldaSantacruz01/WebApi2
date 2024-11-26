@@ -2,6 +2,6 @@
 
 public class SimulateInstallmentResponse
 {
-    public double InstallmentAmount { get; set; }
-    public double TotalAmount { get; set; }
+    public decimal InstallmentAmount { get; set; }
+    public decimal TotalAmount { get; set; }
 }

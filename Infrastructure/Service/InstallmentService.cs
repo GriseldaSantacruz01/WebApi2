@@ -9,13 +9,13 @@ namespace Infrastructure.Service;
 public class InstallmentService : IInstallmentService
 {
     private readonly IInstallmentRepository _installmentRepository;
-    private readonly IResponseService _responseService;
+    private readonly ILoanRequestRepository _loanRequestRepository;
     private readonly IGeneralService _generalService;
 
-    public InstallmentService(IInstallmentRepository installmentRepository, IResponseService responseService, IGeneralService generalService)
+    public InstallmentService(IInstallmentRepository installmentRepository, ILoanRequestRepository loanRequestRepository, IGeneralService generalService)
     {
         _installmentRepository = installmentRepository;
-        _responseService = responseService;
+        _loanRequestRepository = loanRequestRepository;
         _generalService = generalService;
     }
 
@@ -23,7 +23,7 @@ public class InstallmentService : IInstallmentService
     {
         
         var response = simulateInstallment.Adapt<SimulateInstallmentResponse>();
-        var term = await _installmentRepository.VerifyMonths(simulateInstallment.Months);
+        var term = await _loanRequestRepository.VerifyMonths(simulateInstallment.Months);
         response.InstallmentAmount = Math.Round(_generalService
             .CalculateInstallmentAmount(
             term.InterestRate, simulateInstallment.Amount, 
@@ -32,6 +32,26 @@ public class InstallmentService : IInstallmentService
         return response;
 
 
+    }
+
+    public async Task<List<InstallmentResponse>> FilterByStatus(int approvedLoanId, string filter)
+    {
+        var installments = await _installmentRepository.GetInstallments(approvedLoanId);
+        switch (filter.ToLower())
+        {
+            case "all":
+                break; 
+            case "paid":
+                installments = installments.Where(i => i.PaymentDate.HasValue).ToList();
+                break;
+            case "unpaid":
+                installments = installments.Where(i => !i.PaymentDate.HasValue).ToList();
+                break;
+            default:
+                throw new ArgumentException("Filtro invalido, filtros validos: all, paid, unpaid.");
+        }
+
+        return installments.Adapt<List<InstallmentResponse>>();
     }
 
     public async Task<List<Installment>> GetInstallments(int id)

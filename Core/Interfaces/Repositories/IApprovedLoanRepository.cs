@@ -14,7 +14,6 @@ namespace Core.Interfaces.Repositories
     {
         Task AddAsync(ApprovedLoan approvedLoan);
         Task<ApprovedLoan> GetLoanById (int id);
-
-
+        Task UpdateAsync(int loanId);
     }
 }

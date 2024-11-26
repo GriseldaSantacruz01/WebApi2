@@ -14,16 +14,18 @@ namespace Infrastructure.Service
         private readonly ILoanRequestRepository _loanRequestRepository;
         private readonly IApprovedLoanRepository _approvedLoanRepository;
         private readonly IInstallmentRepository _installmentRepository;
+        private readonly ICustomerRepository _customerRepository;
 
         public ResponseService(
             ILoanRequestRepository loanRequestRepository,
             IApprovedLoanRepository approvedLoanRepository,
-            IInstallmentRepository installmentRepository)
+            IInstallmentRepository installmentRepository,
+            ICustomerRepository customerRepository)
         {
             _loanRequestRepository = loanRequestRepository;
             _approvedLoanRepository = approvedLoanRepository;
             _installmentRepository = installmentRepository;
-
+            _customerRepository = customerRepository;
         }
 
         public async Task<Response> VerifyLoanApprovedId(int loanId)
@@ -64,7 +66,7 @@ namespace Infrastructure.Service
 
         public async Task<Response> VerifyCustomer(int customer)
         {
-            var entity = await _loanRequestRepository.VerifyCustomer(customer);
+            var entity = await _customerRepository.GetById(customer);
             if (entity == null)
             {
                 return new Response

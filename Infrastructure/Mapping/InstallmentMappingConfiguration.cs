@@ -20,8 +20,7 @@ namespace Infrastructure.Mapping
             config.NewConfig<Installment, SimulateInstallmentResponse>()
                 .Map(dest => dest.InstallmentAmount, src => 0)
                 .Map(dest => dest.TotalAmount, src => 0);
-
-
+            config.NewConfig<Installment, InstallmentResponse>();
 
         }
 

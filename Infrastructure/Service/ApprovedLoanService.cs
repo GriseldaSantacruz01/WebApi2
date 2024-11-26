@@ -47,8 +47,9 @@ namespace Infrastructure.Service
 
             var response = approved.Adapt<LoanDetailsResponse>();
             response.CustomerName = $"{customer.FirstName} {customer.LastName}";
-            response.TotalAmount = Math.Round((decimal)_generalService
-                .CalculateInstallmentAmount(approved.InterestRate, approved.Amount, approved.Months) * approved.Months);
+            response.TotalAmount = Math.Round(_generalService
+                .CalculateTotalAmount(approved.InterestRate, approved.Amount, approved.Months));
+            
             response.PaidInstallments = paidInstallments;
             response.Profit = Math.Round(response.TotalAmount - response.Amount) ;
             response.PendingInstallments = pendingInstallments;

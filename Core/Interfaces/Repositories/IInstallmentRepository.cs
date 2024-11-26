@@ -11,8 +11,9 @@ namespace Core.Interfaces.Repositories
     public interface IInstallmentRepository
     {
         Task CreateInstallment(SimulateInstallment simulateInstallment);
-        Task<TermIR> VerifyMonths(int months);
         Task UpdateAsync(IEnumerable<Installment> installments);
         Task<List<Installment>> GetInstallments(int loanId);
+        Task AddAsync(Installment installment);
+        Task<List<Installment>> GetByStatus(string status);
     }
 }

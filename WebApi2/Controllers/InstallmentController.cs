@@ -1,4 +1,5 @@
 ﻿using Core.DTOs.Installments;
+using Core.Entities;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Service;
 using Infrastructure.Repositories;
@@ -12,7 +13,7 @@ namespace WebApi2.Controllers
         private readonly IInstallmentService _installamentService;
         private readonly IResponseService _responseService;
 
-        public InstallmentController(IInstallmentService installamentService, IGeneralService termService, IResponseService responseService)
+        public InstallmentController(IInstallmentService installamentService,  IResponseService responseService)
         {
             _installamentService = installamentService;
             _responseService = responseService;
@@ -26,5 +27,13 @@ namespace WebApi2.Controllers
             return Ok(await _installamentService.CreateInstallment(simulateInstallment));
         }
 
+        [HttpGet("/GetInstallments/{approvedLoanId}")]
+        public async Task<IActionResult> FilterByStatus([FromRoute]int approvedLoanId, [FromQuery]string filter)
+        {
+            var approvedLoan = await _responseService.VerifyLoanApprovedId(approvedLoanId);
+            if (approvedLoan.Code == -1 ) return NotFound(approvedLoan.Message);
+            var installments = await _installamentService.FilterByStatus(approvedLoanId, filter);
+            return Ok(installments);
+        }
     }
 }

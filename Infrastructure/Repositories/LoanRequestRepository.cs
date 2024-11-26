@@ -16,22 +16,10 @@ public class LoanRequestRepository : ILoanRequestRepository
         _context = context;
     }
 
-    public async Task<string> CreateLoanRequest(CreateLoanRequest createLoanRequest, int customerId)
+    public async Task AddAsync(LoanRequest loanRequest)
     {
-        
-        var existingTerm = await _context.TermIRs
-            .FirstOrDefaultAsync(x => x.Months == createLoanRequest.Months);
-        var existingCustomer = await _context.Customers
-            .FirstOrDefaultAsync(x => x.CustomerId == customerId);
-
-        var entity = createLoanRequest.Adapt<LoanRequest>();
-        entity.Term = existingTerm!;
-        entity.Customer = existingCustomer!;
-
-        _context.LoanRequests.Add(entity);
+      _context.LoanRequests.Add(loanRequest);
         await _context.SaveChangesAsync();
-
-        return $"La solicitud de préstamo está siendo procesada. El Id de la solicitud es {entity.LoanId}";
     }
 
     public async Task<LoanRequest> GetByIdAsync(int id)
@@ -50,13 +38,6 @@ public class LoanRequestRepository : ILoanRequestRepository
         var loanRequest = await _context.LoanRequests.FirstOrDefaultAsync(x => x.LoanId == loanId && x.RequestStatus == "Pendiente");
         return loanRequest!;
     }
-
-    public async Task<Customer> VerifyCustomer(int customerId)
-    {
-        var result = await _context.Customers.FirstOrDefaultAsync(x => x.CustomerId == customerId);
-        return result!;
-    }
-
     public async Task<TermIR> VerifyMonths(int months)
     {
         var entity = await _context.TermIRs.FirstOrDefaultAsync(x => x.Months == months);

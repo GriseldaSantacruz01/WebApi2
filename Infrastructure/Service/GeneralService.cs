@@ -13,7 +13,7 @@ namespace Infrastructure.Service
 {
     public class GeneralService : IGeneralService
     {
-        public double CalculateInstallmentAmount(float interestRate, decimal amount, int months)
+        public decimal CalculateInstallmentAmount(float interestRate, decimal amount, int months)
         {
             if (interestRate == 0 || months == 0 || amount <= 0) throw new Exception("Los valores son nulos, no se pudo realizar el calculo");
 
@@ -25,8 +25,8 @@ namespace Infrastructure.Service
             var denominator = Math.Pow(1 + interest, months) - 1;
 
             if (denominator == 0) throw new Exception("El calculo ha dado un resultado invalido");
-
-            return numerator / denominator;
+            var result = numerator/denominator;
+            return (decimal)result;
         }
 
         public DateTime CalculateNextDueDate(DateTime approvalDate, int monthsToAdd)
@@ -34,7 +34,12 @@ namespace Infrastructure.Service
             var nextDueDate = new DateTime(approvalDate.Year, approvalDate.Month, 1)
                          .AddMonths(monthsToAdd)
                          .ToUniversalTime(); 
-            return nextDueDate; ;
+            return nextDueDate; 
+        }
+
+        public decimal CalculateTotalAmount(float interestRate, decimal amount, int months)
+        {
+            return CalculateInstallmentAmount(interestRate, amount, months) * months;
         }
 
         public List<Installment> GenerateInstallments(DateTime approvalDate, decimal amount, float interestRate, int months)
@@ -44,6 +49,7 @@ namespace Infrastructure.Service
             var totalAmount = installmentAmount * months;
             for (int i = 1; i <= months; i++)
             {
+                
                 var dueDate = CalculateNextDueDate(approvalDate, i);
                 installments.Add(new Installment
                 {

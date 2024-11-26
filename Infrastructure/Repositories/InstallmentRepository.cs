@@ -1,4 +1,4 @@
-﻿using Core.DTOs.Installments;
+﻿    using Core.DTOs.Installments;
 using Core.Entities;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Service;
@@ -25,13 +25,9 @@ namespace Infrastructure.Repositories
             _termService = termService;
         }
 
-        public async Task CreateInstallment(SimulateInstallment simulateInstallment)
-        {
-            var entity = await _context.TermIRs.FirstOrDefaultAsync(x => x.Months == simulateInstallment.Months);
+       
 
-        }
-
-        public async Task UpdateAsync(IEnumerable<Installment> installments)
+        public async Task UpdateAsync(List<Installment> installments)
         {
             _context.Installments.UpdateRange(installments);
             await _context.SaveChangesAsync();
@@ -56,9 +52,14 @@ namespace Infrastructure.Repositories
                 .OrderBy(i => i.DueDate) 
                 .ToListAsync();
         }
-
+        public async Task<List<Installment>> GetByStatus(string status)
+        {
+            return await _context.Installments
+                .Where(i => i.InstallmentStatus == status)
+                .OrderBy(i => i.DueDate)
+                .ToListAsync();
+        }
         
-
 
     }
 }
