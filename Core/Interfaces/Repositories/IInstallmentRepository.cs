@@ -12,7 +12,7 @@ namespace Core.Interfaces.Repositories
     {
         Task CreateInstallment(SimulateInstallment simulateInstallment);
         Task<TermIR> VerifyMonths(int months);
-        Task AddAsync(Installment installment);
+        Task UpdateAsync(IEnumerable<Installment> installments);
         Task<List<Installment>> GetInstallments(int loanId);
     }
 }

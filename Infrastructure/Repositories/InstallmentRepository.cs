@@ -31,6 +31,12 @@ namespace Infrastructure.Repositories
 
         }
 
+        public async Task UpdateAsync(IEnumerable<Installment> installments)
+        {
+            _context.Installments.UpdateRange(installments);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task AddAsync(Installment installment)
         {
             await _context.Installments.AddAsync(installment);
