@@ -4,8 +4,8 @@ namespace Core.Interfaces.Repositories
 {
     public interface IApprovedLoanRepository
     {
-        Task AddAsync(ApprovedLoan approvedLoan);
+        Task AddApprovedLoan(ApprovedLoan approvedLoan);
         Task<ApprovedLoan> GetLoanById (int id);
-        Task UpdateAsync(int loanId);
+        Task UpdateApprovedLoan(int loanId);
     }
 }

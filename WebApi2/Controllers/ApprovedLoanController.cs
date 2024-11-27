@@ -20,15 +20,12 @@ namespace WebApi2.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet("/{loanId}")]
+        [HttpGet("GetApprovedLoanDetails/{loanId}")]
         public async Task<IActionResult> GetLoanDetailed([FromRoute]int loanId)
         {
             var loanApproved = await _responseService.VerifyLoanApprovedId(loanId);
             if (loanApproved.Code == -1) return NotFound(loanApproved.Message);
-            return Ok(await _approvedLoanService.GetLoanById(loanId));
+            return Ok(await _approvedLoanService.GetApprovedLoanDetails(loanId));
         }
-
-
-        
     }
 }

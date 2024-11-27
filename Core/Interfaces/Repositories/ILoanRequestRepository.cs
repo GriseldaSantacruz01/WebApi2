@@ -4,13 +4,10 @@ namespace Core.Interfaces.Repositories
 {
     public interface ILoanRequestRepository
     {
-        Task AddAsync(LoanRequest loanRequest);
-        Task<LoanRequest> GetByIdAsync(int id);
-        Task UpdateAsync(LoanRequest loanRequest);
-        Task<LoanRequest> VerifyId(int loanId);
-        Task<TermIR> VerifyMonths(int months);
-        
-
-
+        Task AddLoanRequest(LoanRequest loanRequest);
+        Task<LoanRequest> GetLoanRequestById(int id);
+        Task<LoanRequest> GetPendingRequestId(int loanId);
+        Task UpdateLoanRequestById(LoanRequest loanRequest);
+        Task<TermIR> GetByMonths(int months);
     }
 }

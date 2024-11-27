@@ -11,7 +11,6 @@ namespace Infrastructure.Configurations
             entity.HasKey(x => x.LoanId);
             entity.Property(x => x.Type)
                 .IsRequired();
-            
             entity
                 .HasOne(x => x.Customer)
                 .WithMany(x => x.Loans)

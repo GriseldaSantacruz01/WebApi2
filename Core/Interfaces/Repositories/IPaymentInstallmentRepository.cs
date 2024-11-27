@@ -4,5 +4,5 @@ namespace Core.Interfaces.Repositories;
 
 public interface IPaymentInstallmentRepository
 {
-    Task AddAsync(PaymentInstallment payment);
+    Task AddPaymentInstallment(PaymentInstallment payment);
 }

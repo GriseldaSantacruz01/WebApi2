@@ -25,34 +25,30 @@ namespace Infrastructure.Service
             _customerRepository = customerRepository;
             _generalService = generalService;
         }
-        public async Task<LoanDetailsResponse> GetLoanById(int loanApprovedId)
+        public async Task<LoanDetailsResponse> GetApprovedLoanDetails(int approvedLoanId)
         {
-            var approved = await _approvedLoanRepository.GetLoanById(loanApprovedId);
-            var installments = await _installmentRepository.GetInstallments(loanApprovedId);
-            var customer = await _customerRepository.GetById(approved.CustomerId);
-            
+            var approved = await _approvedLoanRepository.GetLoanById(approvedLoanId);
+            var installments = await _installmentRepository.GetInstallmentsByApprovedLoanId(approvedLoanId);
+            var customer = await _customerRepository.GetCustomerById(approved.CustomerId);
 
             var paidInstallments = installments.Count(i => i.PaymentDate.HasValue);
             var pendingInstallments = installments.Count - paidInstallments;
-
             
             var nextInstallment = installments.FirstOrDefault(i => !i.PaymentDate.HasValue);
             string nextDueDateMessage = nextInstallment != null
                 ? nextInstallment.DueDate.ToString("yyyy-MM-dd")
                 : "Todas las cuotas estan pagadas";
 
-
             var response = approved.Adapt<LoanDetailsResponse>();
             response.CustomerName = $"{customer.FirstName} {customer.LastName}";
             response.TotalAmount = Math.Round(_generalService
                 .CalculateTotalAmount(approved.InterestRate, approved.Amount, approved.Months));
-            
+
             response.PaidInstallments = paidInstallments;
             response.Profit = Math.Round(response.TotalAmount - response.Amount) ;
             response.PendingInstallments = pendingInstallments;
             response.NextDueDate = nextDueDateMessage;
             return response;
-
         }
     }
 }

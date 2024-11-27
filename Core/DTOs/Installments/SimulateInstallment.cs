@@ -4,7 +4,5 @@
     {
         public decimal Amount { get; set; }
         public int Months { get; set; }
-
-
     }
 }

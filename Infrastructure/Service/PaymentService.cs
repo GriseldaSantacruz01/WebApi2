@@ -26,7 +26,7 @@ namespace Infrastructure.Service
         }
         public async Task<string> PayInstallmentsAsync(int loanApprovedId, int[] installmentIds)
         {
-            var installments = await _installmentRepository.GetInstallments(loanApprovedId);
+            var installments = await _installmentRepository.GetInstallmentsByApprovedLoanId(loanApprovedId);
             var unpaidInstallments = installments
                 .Where(i => i.PaymentDate == null).ToList();
             var installmentsToPay = unpaidInstallments
@@ -45,15 +45,14 @@ namespace Infrastructure.Service
                 var payment = installment.Adapt<PaymentInstallment>();
                 payment.NextDueDate = _generalService.CalculateNextDueDate(installment.DueDate, 1);
                 amount += installment.InstallmentTotal ;
-                await _paymentInstallmentRepository.AddAsync(payment);
+                await _paymentInstallmentRepository.AddPaymentInstallment(payment);
 
             }
             var approvedLoan = await _approvedLoanRepository.GetLoanById(loanApprovedId);
             approvedLoan.PendingAmount -= amount;
 
-
-            await _approvedLoanRepository.UpdateAsync(loanApprovedId);
-            await _installmentRepository.UpdateAsync(installmentsToPay);
+            await _approvedLoanRepository.UpdateApprovedLoan(loanApprovedId);
+            await _installmentRepository.UpdateInstallments(installmentsToPay);
 
             return $"{installmentsToPay.Count} cuota(s) pagada(s) exitosamente.";
         }

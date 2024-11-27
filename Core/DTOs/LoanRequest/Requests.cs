@@ -6,7 +6,6 @@
         public float InterestRate { get; set; }
 
     }
-
     public class RejectedRequest
     {
         public int LoanId { get; set; }

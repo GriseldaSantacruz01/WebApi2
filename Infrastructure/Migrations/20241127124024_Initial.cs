@@ -47,12 +47,12 @@ namespace Infrastructure.Migrations
                 {
                     LoanId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CustomerId = table.Column<int>(type: "integer", nullable: false),
-                    Months = table.Column<int>(type: "integer", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Type = table.Column<string>(type: "text", nullable: false),
                     RejectionReason = table.Column<string>(type: "text", nullable: true),
-                    RequestStatus = table.Column<string>(type: "text", nullable: false)
+                    RequestStatus = table.Column<string>(type: "text", nullable: false),
+                    CustomerId = table.Column<int>(type: "integer", nullable: false),
+                    Months = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,12 +78,12 @@ namespace Infrastructure.Migrations
                     ApprovedLoanId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     InterestRate = table.Column<float>(type: "real", nullable: false),
-                    Months = table.Column<int>(type: "integer", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    AmountDue = table.Column<decimal>(type: "numeric", nullable: false),
+                    PendingAmount = table.Column<decimal>(type: "numeric", nullable: false),
                     Type = table.Column<string>(type: "text", nullable: false),
                     ApprovalDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CustomerId = table.Column<int>(type: "integer", nullable: false),
+                    Months = table.Column<int>(type: "integer", nullable: false),
                     LoanId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>

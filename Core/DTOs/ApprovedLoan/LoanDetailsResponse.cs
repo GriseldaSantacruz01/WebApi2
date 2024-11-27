@@ -9,16 +9,12 @@ namespace Core.DTOs.ApprovedLoan
         public decimal Amount { get; set; }
         public decimal TotalAmount { get; set; }
         public decimal Profit { get; set; }
-        public decimal AmountDue { get; set; }
+        public decimal PendingAmount { get; set; }
         public int Months { get; set; }
         public string Type { get; set; } = string.Empty;
         public float InterestRate { get; set; }
         public int PaidInstallments { get; set; }
         public int PendingInstallments { get; set; }
         public string NextDueDate { get; set; } = string.Empty;
-
-
-
-
     }
 }

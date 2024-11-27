@@ -33,9 +33,6 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<decimal>("AmountDue")
-                        .HasColumnType("numeric");
-
                     b.Property<DateTime>("ApprovalDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -50,6 +47,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("Months")
                         .HasColumnType("integer");
+
+                    b.Property<decimal>("PendingAmount")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("Type")
                         .IsRequired()

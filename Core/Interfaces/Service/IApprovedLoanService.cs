@@ -4,6 +4,6 @@ namespace Core.Interfaces.Service
 {
     public interface IApprovedLoanService
     {
-        Task<LoanDetailsResponse> GetLoanById(int loanId);
+        Task<LoanDetailsResponse> GetApprovedLoanDetails(int approvedLoanId);
     }
 }

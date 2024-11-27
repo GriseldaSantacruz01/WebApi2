@@ -12,11 +12,10 @@ namespace WebApi2.Controllers
             _tokenService = tokenService;
         }
 
-        [HttpGet]
+        [HttpGet("/GenerateToken")]
         public IActionResult GenerateToken ([FromQuery]string name, [FromQuery]string rol)
         {
             return Ok(_tokenService.GenerateToken(name, rol));
-
         }
 
     }

@@ -32,7 +32,7 @@ namespace WebApi2.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("/CreateLoanRequest")]
         public async Task<IActionResult> CreateLoanRequest([FromBody]CreateLoanRequest createLoanRequest)
         {
             var validation = await _loanValidator.ValidateAsync(createLoanRequest);
@@ -64,7 +64,7 @@ namespace WebApi2.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("/Rejection/{loanId}")]
+        [HttpPost("/Rejection")]
 
         public async Task<IActionResult> RejectedLoan(RejectedRequest rejectedRequest)
         {

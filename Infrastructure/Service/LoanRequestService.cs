@@ -33,24 +33,24 @@ public class LoanRequestService : ILoanRequestService
     }
     public async Task<string> CreateLoanRequest(CreateLoanRequest createLoanRequest)
     {
-        var existingTerm = await _loanRequestRepository.VerifyMonths(createLoanRequest.Months);
-        var existingCustomer = await _customerRepository.GetById(createLoanRequest.CustomerId);
+        var existingTerm = await _loanRequestRepository.GetByMonths(createLoanRequest.Months);
+        var existingCustomer = await _customerRepository.GetCustomerById(createLoanRequest.CustomerId);
 
         var entity = createLoanRequest.Adapt<LoanRequest>();
         entity.Term = existingTerm!;
         entity.Customer = existingCustomer!;
 
-        await _loanRequestRepository.AddAsync(entity);
+        await _loanRequestRepository.AddLoanRequest(entity);
         return $"La solicitud de préstamo está siendo procesada. El Id de la solicitud es {entity.LoanId}";
 
     }
 
     public async Task<string> RejectedLoan(int loanId, string reason)
     {
-        var loan = await _loanRequestRepository.GetByIdAsync(loanId);
+        var loan = await _loanRequestRepository.GetLoanRequestById(loanId);
         loan.RequestStatus = "Rechazada";
         loan.RejectionReason = reason;
-        await _loanRequestRepository.UpdateAsync(loan);
+        await _loanRequestRepository.UpdateLoanRequestById(loan);
 
         return $"La solicitud fue rechazada por el siguiente motivo {loan.RejectionReason}";
     }
@@ -59,7 +59,7 @@ public class LoanRequestService : ILoanRequestService
 
     public async Task<string> AproveLoan(int loanId, float interestRate)
     {
-        var loanRequest = await _loanRequestRepository.VerifyId(loanId);
+        var loanRequest = await _loanRequestRepository.GetLoanRequestById(loanId);
 
         loanRequest.RequestStatus = "Aprobado";
 
@@ -68,12 +68,12 @@ public class LoanRequestService : ILoanRequestService
         approvedLoan.PendingAmount = Math.Round(_generalService.CalculateTotalAmount(interestRate, approvedLoan.Amount, approvedLoan.Months));
 
         var installments = _generalService.GenerateInstallments(approvedLoan.ApprovalDate, approvedLoan.Amount, approvedLoan.InterestRate, approvedLoan.Months);
-        await _approvedLoanRepository.AddAsync(approvedLoan);
+        await _approvedLoanRepository.AddApprovedLoan(approvedLoan);
 
         foreach (var installment in installments)
         {
             installment.ApprovedLoanId = approvedLoan.ApprovedLoanId;
-            await _installmentRepository.AddAsync(installment);
+            await _installmentRepository.AddInstallment(installment);
         }
         return $"La solicitud ha sido apropbada correctamente, el Id del prestamo es: {approvedLoan.ApprovedLoanId}";
     }

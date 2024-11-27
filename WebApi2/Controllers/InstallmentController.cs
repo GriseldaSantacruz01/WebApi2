@@ -24,7 +24,7 @@ namespace WebApi2.Controllers
             _responseService = responseService;
             _simulateInstallmentValidator = simulateInstallmentValidator;
         }
-        [HttpPost]
+        [HttpPost("/Simulator")]
         public async Task<IActionResult> SimulateInstallment([FromBody] SimulateInstallment simulateInstallment)
         {
             var validation = await _simulateInstallmentValidator.ValidateAsync(simulateInstallment);
@@ -36,7 +36,7 @@ namespace WebApi2.Controllers
             return Ok(await _installamentService.SimulateInstallment(simulateInstallment));
         }
 
-        [HttpGet("/GetInstallments/{approvedLoanId}")]
+        [HttpGet("/GetInstallmentsByStatus/{approvedLoanId}")]
         public async Task<IActionResult> FilterByStatus([FromRoute]int approvedLoanId, [FromQuery]string filter)
         {
             var approvedLoan = await _responseService.VerifyLoanApprovedId(approvedLoanId);

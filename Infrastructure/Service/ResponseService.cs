@@ -48,7 +48,7 @@ namespace Infrastructure.Service
 
         public async Task<Response> VerifyMonths(int months)
         {
-            var entity = await _loanRequestRepository.VerifyMonths(months);
+            var entity = await _loanRequestRepository.GetByMonths(months);
             if (entity == null)
             {
                 return new Response
@@ -66,7 +66,7 @@ namespace Infrastructure.Service
 
         public async Task<Response> VerifyCustomer(int customer)
         {
-            var entity = await _customerRepository.GetById(customer);
+            var entity = await _customerRepository.GetCustomerById(customer);
             if (entity == null)
             {
                 return new Response
@@ -84,7 +84,7 @@ namespace Infrastructure.Service
 
         public async Task<Response> VerifyLoanId(int loanId)
         {
-            var entity = await _loanRequestRepository.VerifyId(loanId);
+            var entity = await _loanRequestRepository.GetLoanRequestByIdAsync(loanId);
             if (entity == null)
             {
                 return new Response

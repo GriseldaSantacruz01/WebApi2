@@ -27,20 +27,17 @@ public class InstallmentService : IInstallmentService
     {
         
         var response = simulateInstallment.Adapt<SimulateInstallmentResponse>();
-        var term = await _loanRequestRepository.VerifyMonths(simulateInstallment.Months);
+        var term = await _loanRequestRepository.GetByMonths(simulateInstallment.Months);
         response.InstallmentAmount = Math.Round(_generalService
             .CalculateInstallmentAmount(
             term.InterestRate, simulateInstallment.Amount, 
             simulateInstallment.Months));
         response.TotalAmount = Math.Round(response.InstallmentAmount * simulateInstallment.Months);
         return response;
-
-
     }
-
     public async Task<List<InstallmentResponse>> FilterByStatus(int approvedLoanId, string filter)
     {
-        var installments = await _installmentRepository.GetInstallments(approvedLoanId);
+        var installments = await _installmentRepository.GetInstallmentsByApprovedLoanId(approvedLoanId);
         switch (filter.ToLower())
         {
             case "all":
@@ -54,13 +51,11 @@ public class InstallmentService : IInstallmentService
             default:
                 throw new ArgumentException("Filtro invalido, filtros validos: all, paid, unpaid.");
         }
-
         return installments.Adapt<List<InstallmentResponse>>();
     }
-
-    public async Task<List<Installment>> GetInstallments(int id)
+    public async Task<List<Installment>> GetInstallmentsByApprovedLoanId(int id)
     {
-        return await _installmentRepository.GetInstallments(id);
+        return await _installmentRepository.GetInstallmentsByApprovedLoanId(id);
     }
 
     public async Task<List<PastDueInstallmentResponse>> DelayInstallmentList(int approvedLoanId)
@@ -70,7 +65,5 @@ public class InstallmentService : IInstallmentService
         var result = installments.Adapt<List<PastDueInstallmentResponse>>();
 
         return result;
-
     }
-
 }

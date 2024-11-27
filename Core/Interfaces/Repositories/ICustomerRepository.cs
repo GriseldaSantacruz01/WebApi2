@@ -4,5 +4,5 @@ namespace Core.Interfaces.Repositories;
 
 public interface ICustomerRepository
 {
-    Task<Customer> GetById (int id);
+    Task<Customer> GetCustomerById (int id);
 }
