@@ -1,4 +1,4 @@
-﻿using Core.Interfaces.Services;
+﻿using Core.Interfaces.Service;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Controllers;
 

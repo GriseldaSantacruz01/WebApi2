@@ -18,10 +18,5 @@ public class InstallmentConfiguration : IEntityTypeConfiguration<Installment>
         entity.Property(x => x.PaymentDate)
             .IsRequired(false)
             .HasDefaultValue(null);
-        
-        
-            
-        
-
     }
 }

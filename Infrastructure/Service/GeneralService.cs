@@ -1,13 +1,7 @@
 ﻿
 
 using Core.Entities;
-using Core.Interfaces.Repositories;
 using Core.Interfaces.Service;
-using Infrastructure.Contexts;
-using Infrastructure.Repositories;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Service
 {

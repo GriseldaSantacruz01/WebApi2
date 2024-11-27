@@ -23,7 +23,7 @@ public class InstallmentService : IInstallmentService
         _generalService = generalService;
     }
 
-    public async Task<SimulateInstallmentResponse> CreateInstallment(SimulateInstallment simulateInstallment)
+    public async Task<SimulateInstallmentResponse> SimulateInstallment(SimulateInstallment simulateInstallment)
     {
         
         var response = simulateInstallment.Adapt<SimulateInstallmentResponse>();

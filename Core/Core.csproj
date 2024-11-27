@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DTOs\PaymentInstallment\NewFolder\**" />
     <Compile Remove="Interfaces\Services\**" />
+    <EmbeddedResource Remove="DTOs\PaymentInstallment\NewFolder\**" />
     <EmbeddedResource Remove="Interfaces\Services\**" />
+    <None Remove="DTOs\PaymentInstallment\NewFolder\**" />
     <None Remove="Interfaces\Services\**" />
   </ItemGroup>
 
@@ -24,10 +27,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
     <PackageReference Include="Npgsql" Version="8.0.6" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DTOs\PaymentInstallment\NewFolder\" />
   </ItemGroup>
 
 </Project>

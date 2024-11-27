@@ -15,7 +15,6 @@ namespace Infrastructure.Configurations
                 .HasForeignKey<ApprovedLoan>(x => x.LoanId);
             entity.Property(x => x.InterestRate)
                 .IsRequired();
-            
         }
     }
 }

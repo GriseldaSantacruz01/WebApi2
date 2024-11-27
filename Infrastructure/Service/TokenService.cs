@@ -1,6 +1,5 @@
 ﻿using Core.Auth;
 using Core.Entities;
-using Core.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
+using Core.Interfaces.Service;
 namespace Infrastructure.Service;
 public class TokenService : ITokenService
 {

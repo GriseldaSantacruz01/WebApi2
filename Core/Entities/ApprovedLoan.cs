@@ -6,7 +6,7 @@
         public float InterestRate {  get; set; }
         public int Months {  get; set; }
         public decimal Amount { get; set; }
-        public decimal AmountDue {  get; set; } //PendingAmount
+        public decimal PendingAmount {  get; set; } //PendingAmount
         public string Type { get; set; } = string.Empty;
         public DateTime ApprovalDate { get; set; } 
         public Customer Customer { get; set; } = null!;

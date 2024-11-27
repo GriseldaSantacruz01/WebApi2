@@ -65,7 +65,7 @@ public class LoanRequestService : ILoanRequestService
 
         var approvedLoan = loanRequest.Adapt<ApprovedLoan>();
         approvedLoan.InterestRate = interestRate;
-        approvedLoan.AmountDue = Math.Round(_generalService.CalculateTotalAmount(interestRate, approvedLoan.Amount, approvedLoan.Months));
+        approvedLoan.PendingAmount = Math.Round(_generalService.CalculateTotalAmount(interestRate, approvedLoan.Amount, approvedLoan.Months));
 
         var installments = _generalService.GenerateInstallments(approvedLoan.ApprovalDate, approvedLoan.Amount, approvedLoan.InterestRate, approvedLoan.Months);
         await _approvedLoanRepository.AddAsync(approvedLoan);

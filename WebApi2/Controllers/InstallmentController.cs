@@ -2,6 +2,7 @@
 using Core.Entities;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Service;
+using FluentValidation;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Controllers;
@@ -12,19 +13,27 @@ namespace WebApi2.Controllers
     {
         private readonly IInstallmentService _installamentService;
         private readonly IResponseService _responseService;
+        private readonly IValidator<SimulateInstallment> _simulateInstallmentValidator;
 
-        public InstallmentController(IInstallmentService installamentService,  IResponseService responseService)
+        public InstallmentController
+            (IInstallmentService installamentService,
+            IResponseService responseService,
+            IValidator<SimulateInstallment>  simulateInstallmentValidator)
         {
             _installamentService = installamentService;
             _responseService = responseService;
+            _simulateInstallmentValidator = simulateInstallmentValidator;
         }
         [HttpPost]
-        public async Task<IActionResult> CreateInstallment([FromBody] SimulateInstallment simulateInstallment)
+        public async Task<IActionResult> SimulateInstallment([FromBody] SimulateInstallment simulateInstallment)
         {
+            var validation = await _simulateInstallmentValidator.ValidateAsync(simulateInstallment);
+            if (!validation.IsValid) return BadRequest(validation.Errors);
+
             var verify = await _responseService.VerifyMonths(simulateInstallment.Months);
             if (verify.Code == -1 ) return NotFound(verify.Message);
 
-            return Ok(await _installamentService.CreateInstallment(simulateInstallment));
+            return Ok(await _installamentService.SimulateInstallment(simulateInstallment));
         }
 
         [HttpGet("/GetInstallments/{approvedLoanId}")]

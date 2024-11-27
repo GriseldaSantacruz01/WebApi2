@@ -25,9 +25,6 @@ namespace Infrastructure.Service
             _customerRepository = customerRepository;
             _generalService = generalService;
         }
-
-        
-        
         public async Task<LoanDetailsResponse> GetLoanById(int loanApprovedId)
         {
             var approved = await _approvedLoanRepository.GetLoanById(loanApprovedId);
@@ -57,7 +54,5 @@ namespace Infrastructure.Service
             return response;
 
         }
-
-        
     }
 }

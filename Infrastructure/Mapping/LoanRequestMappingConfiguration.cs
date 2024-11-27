@@ -21,7 +21,7 @@ public class LoanRequestMappingConfiguration : IRegister
             .Map(dest => dest.Months, src => src.Months)
             .Map(dest => dest.Type, src => src.Type)
             .Map(dest => dest.InterestRate, src => 0)
-            .Map(dest => dest.AmountDue, src => 0);
+            .Map(dest => dest.PendingAmount, src => 0);
 
     }
 }

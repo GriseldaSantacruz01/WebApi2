@@ -4,7 +4,6 @@ using Core.Interfaces.Service;
 
 namespace Infrastructure.Service
 {
-
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
@@ -12,7 +11,6 @@ namespace Infrastructure.Service
         {
             _customerRepository = customerRepository;
         }
-
         public async Task<Customer> GetCustomer(int id)
         {
             var customer = await _customerRepository.GetById(id);

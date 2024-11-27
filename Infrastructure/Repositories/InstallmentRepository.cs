@@ -17,16 +17,12 @@ namespace Infrastructure.Repositories
     {
         private readonly AplicationDbContext _context;
         private readonly IGeneralService _termService;
-        
 
         public InstallmentRepository(AplicationDbContext context, IGeneralService termService)
         {
             _context = context;
             _termService = termService;
         }
-
-
-       
 
         public async Task UpdateAsync(List<Installment> installments)
         {

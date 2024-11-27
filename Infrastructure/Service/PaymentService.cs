@@ -49,7 +49,7 @@ namespace Infrastructure.Service
 
             }
             var approvedLoan = await _approvedLoanRepository.GetLoanById(loanApprovedId);
-            approvedLoan.AmountDue -= amount;
+            approvedLoan.PendingAmount -= amount;
 
 
             await _approvedLoanRepository.UpdateAsync(loanApprovedId);

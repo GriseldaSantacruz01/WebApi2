@@ -1,7 +1,6 @@
 ﻿using Core.Auth;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Service;
-using Core.Interfaces.Services;
 using Infrastructure.Contexts;
 using Infrastructure.Repositories;
 using Infrastructure.Service;
@@ -16,6 +15,13 @@ using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using FluentValidation;
+using Infrastructure.Validations.Installment;
+using Core.DTOs.Installments;
+using Core.DTOs.LoanRequest;
+using Infrastructure.Validations.LoanRequest;
+using Infrastructure.Validations.Payment;
+using Core.DTOs.PaymentInstallment;
 
 namespace Infrastructure;
 
@@ -32,6 +38,17 @@ public static class DependencyInjection
         services.AddAuthentication();
         services.ConfigureJwt(configuration);
         services.AddCustomSwagger();
+        services.AddValidation();
+        return services;
+    }
+
+    public static IServiceCollection AddValidation(this IServiceCollection services)
+    {
+        services.AddScoped<IValidator<SimulateInstallment>, SimulateInstallmentValidation>();
+        services.AddScoped<IValidator<ApprovedRequest>, ApprovedRequestValidation>();
+        services.AddScoped < IValidator<RejectedRequest>, RejectedRequestValidation>();
+        services.AddScoped<IValidator<CreateLoanRequest>, CreateLoanRequestValidation>();
+        services.AddScoped<IValidator<PaymentRequest>, PaymentRequestValidation>();
         return services;
     }
 

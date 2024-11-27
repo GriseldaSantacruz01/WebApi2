@@ -1,5 +1,4 @@
 ﻿using Core.DTOs.ApprovedLoan;
-using Core.Entities;
 
 namespace Core.Interfaces.Service
 {
