@@ -13,8 +13,7 @@ namespace Infrastructure.Repositories
         }
         public async Task AddPaymentInstallment(PaymentInstallment payment)
         {
-            _context.PaymentInstallments.Add(payment);
-            await _context.SaveChangesAsync();
+            await _context.AddAsync(payment);
         }
 
         public async Task UpdatePaymentInstallment(PaymentInstallment payment)

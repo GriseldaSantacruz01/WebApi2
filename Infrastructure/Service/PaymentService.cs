@@ -44,7 +44,7 @@ namespace Infrastructure.Service
                 .Take(paymentRequest.NumberOfInstallmentsToPay)
                 .ToList();
 
-            var totalAmount = installmentsToPay.Sum(i => i.InstallmentTotal);
+            var totalAmount = installmentsToPay.Sum(i => i.TotalAmount);
             var nextInstallment = installments
                 .OrderBy(i => i.DueDate)
                 .FirstOrDefault(i => i.InstallmentStatus != "Pagada");
@@ -53,7 +53,6 @@ namespace Infrastructure.Service
             payment.PaymentDate = DateTime.UtcNow;
             payment.InstallmentTotal = totalAmount;
             payment.NextDueDate = nextInstallment!.DueDate;
-            await _paymentInstallmentRepository.AddPaymentInstallment(payment);
 
             foreach (var installment in installmentsToPay)
             {
@@ -62,10 +61,9 @@ namespace Infrastructure.Service
                 installment.PaymentDate = DateTime.UtcNow;
             }
             await _installmentRepository.UpdateInstallments(installments);
-            var approvedLoan = await _approvedLoanRepository.GetLoanById(paymentRequest.LoanApprovedId);
-            approvedLoan.PendingAmount -= totalAmount;
 
 
+            await _paymentInstallmentRepository.AddPaymentInstallment(payment);
 
             return $"{paymentRequest.NumberOfInstallmentsToPay} cuota(s han sido pagada(s) correctamente";
         }
