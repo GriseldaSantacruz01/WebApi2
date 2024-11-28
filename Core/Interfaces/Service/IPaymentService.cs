@@ -1,7 +1,9 @@
-﻿namespace Core.Interfaces.Service
+﻿using Core.DTOs.PaymentInstallment;
+
+namespace Core.Interfaces.Service
 {
     public interface IPaymentService
     {
-        Task<string> PayInstallmentsAsync(int loanApprovedId, int[] installmentIds);
+        Task<string> PayInstallmentsAsync(PaymentRequestDto paymentRequestDto);
     }
 }
