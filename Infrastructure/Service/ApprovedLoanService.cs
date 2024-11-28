@@ -10,18 +10,15 @@ namespace Infrastructure.Service
     {
         private readonly IApprovedLoanRepository _approvedLoanRepository;
         private readonly IInstallmentRepository _installmentRepository;
-        private readonly ILoanRequestRepository _loanRequestRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IGeneralService _generalService;
         public ApprovedLoanService (IApprovedLoanRepository approvedLoanRepository, 
-                IInstallmentRepository installmentRepository, 
-                ILoanRequestRepository loanRequestRepository, 
+                IInstallmentRepository installmentRepository,
                 ICustomerRepository customerRepository,
                 IGeneralService generalService)
         {
             _approvedLoanRepository = approvedLoanRepository;
             _installmentRepository = installmentRepository;
-            _loanRequestRepository = loanRequestRepository;
             _customerRepository = customerRepository;
             _generalService = generalService;
         }

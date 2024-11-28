@@ -6,6 +6,5 @@ namespace Core.Interfaces.Repositories
     {
         Task AddApprovedLoan(ApprovedLoan approvedLoan);
         Task<ApprovedLoan> GetLoanById (int id);
-        Task UpdateApprovedLoan(int loanId);
     }
 }

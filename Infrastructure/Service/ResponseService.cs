@@ -1,11 +1,6 @@
 ﻿using Core.Entities;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Service
 {
@@ -13,18 +8,15 @@ namespace Infrastructure.Service
     {
         private readonly ILoanRequestRepository _loanRequestRepository;
         private readonly IApprovedLoanRepository _approvedLoanRepository;
-        private readonly IInstallmentRepository _installmentRepository;
         private readonly ICustomerRepository _customerRepository;
 
         public ResponseService(
             ILoanRequestRepository loanRequestRepository,
             IApprovedLoanRepository approvedLoanRepository,
-            IInstallmentRepository installmentRepository,
             ICustomerRepository customerRepository)
         {
             _loanRequestRepository = loanRequestRepository;
             _approvedLoanRepository = approvedLoanRepository;
-            _installmentRepository = installmentRepository;
             _customerRepository = customerRepository;
         }
 

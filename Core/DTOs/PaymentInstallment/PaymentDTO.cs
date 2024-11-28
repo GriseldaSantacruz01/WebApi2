@@ -1,8 +1,8 @@
 ﻿namespace Core.DTOs.PaymentInstallment
 {
-    public class PaymentRequest
+    public class PaymentDTO
     {
         public int ApprovedLoanId { get; set; }
-        public int[] InstallmentIds { get; set; } = []!; 
+        public int NumberOfInstallmentsToPay { get; set; }
     }
 }

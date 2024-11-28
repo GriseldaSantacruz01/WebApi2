@@ -1,5 +1,4 @@
-﻿using Core.DTOs.LoanRequest;
-using Core.Entities;
+﻿using Core.Entities;
 using Core.Interfaces.Repositories;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -31,12 +30,6 @@ public class LoanRequestRepository : ILoanRequestRepository
     {
         _context.LoanRequests.Update(loanRequest);
         await _context.SaveChangesAsync();
-    }
-
-    public async Task<LoanRequest> GetPendingRequestId(int loanId)
-    {
-        var loanRequest = await _context.LoanRequests.FirstOrDefaultAsync(x => x.LoanId == loanId && x.RequestStatus == "Pendiente");
-        return loanRequest!;
     }
     public async Task<TermIR> GetByMonths(int months)
     {

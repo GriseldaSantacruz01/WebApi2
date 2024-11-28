@@ -12,8 +12,8 @@ namespace Core.Entities
         public DateTime PaymentDate { get; set; }
         public DateTime NextDueDate { get; set; }
 
-        public int InstallmentId { get; set; }
-        public decimal InstallmentAmount { get; set; }
-        public Installment Installment { get; set; } = null!;
+        public int NumberOfInstallmentsToPay { get; set; }
+        public decimal InstallmentTotal { get; set; }
+        public List<Installment> Installments { get; set; } = null!;
     }
 }

@@ -11,10 +11,11 @@ public class Installment
     public decimal InstallmentTotal { get; set; }
     public decimal InterestAmount {  get; set; }
     public string InstallmentStatus { get; set;  } = string.Empty;
-    public DateTime DueDate { get; set; }
     public DateTime? PaymentDate { get; set; }
+    public DateTime DueDate { get; set; }
+    public int? PaymentInstallmentId { get; set; }
 
     public int ApprovedLoanId { get; set; }
     public ApprovedLoan ApprovedLoan { get; set; } = null!;
-    public PaymentInstallment PaymentInstallment { get; set; } = null!;
+    public PaymentInstallment? PaymentInstallment { get; set; } = null!;
 }

@@ -2,10 +2,7 @@
 using Core.Entities;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Service;
-using Infrastructure.Repositories;
 using Mapster;
-using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Service;
 

@@ -3,7 +3,6 @@ using Core.Entities;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Service;
 using Mapster;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Service;
 
@@ -53,11 +52,6 @@ public class InstallmentService : IInstallmentService
         }
         return installments.Adapt<List<InstallmentResponse>>();
     }
-    public async Task<List<Installment>> GetInstallmentsByApprovedLoanId(int id)
-    {
-        return await _installmentRepository.GetInstallmentsByApprovedLoanId(id);
-    }
-
     public async Task<List<PastDueInstallmentResponse>> DelayInstallmentList()
     {
         var installments = await _installmentRepository.GetDelayedInstallmentsWithLoanAndCustomer();

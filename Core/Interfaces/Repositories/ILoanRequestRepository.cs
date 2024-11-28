@@ -6,7 +6,6 @@ namespace Core.Interfaces.Repositories
     {
         Task AddLoanRequest(LoanRequest loanRequest);
         Task<LoanRequest> GetLoanRequestById(int id);
-        Task<LoanRequest> GetPendingRequestId(int loanId);
         Task UpdateLoanRequestById(LoanRequest loanRequest);
         Task<TermIR> GetByMonths(int months);
     }
