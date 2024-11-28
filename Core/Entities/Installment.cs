@@ -16,6 +16,5 @@ public class Installment
 
     public int ApprovedLoanId { get; set; }
     public ApprovedLoan ApprovedLoan { get; set; } = null!;
-    public int? PaymentInstallmentId { get; set; }
     public PaymentInstallment PaymentInstallment { get; set; } = null!;
 }

@@ -116,17 +116,12 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("PaymentDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("PaymentInstallmentId")
-                        .HasColumnType("integer");
-
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("numeric");
 
                     b.HasKey("InstallmentId");
 
                     b.HasIndex("ApprovedLoanId");
-
-                    b.HasIndex("PaymentInstallmentId");
 
                     b.ToTable("Installments");
                 });
@@ -176,19 +171,22 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PaymentInstallmentId"));
 
-                    b.Property<decimal>("InstallmentTotal")
+                    b.Property<decimal>("InstallmentAmount")
                         .HasColumnType("numeric");
+
+                    b.Property<int>("InstallmentId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("NextDueDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("NumberOfInstallmentsToPay")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("PaymentInstallmentId");
+
+                    b.HasIndex("InstallmentId")
+                        .IsUnique();
 
                     b.ToTable("PaymentInstallments");
                 });
@@ -239,13 +237,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Entities.PaymentInstallment", "PaymentInstallment")
-                        .WithMany("Installments")
-                        .HasForeignKey("PaymentInstallmentId");
-
                     b.Navigation("ApprovedLoan");
-
-                    b.Navigation("PaymentInstallment");
                 });
 
             modelBuilder.Entity("Core.Entities.LoanRequest", b =>
@@ -268,6 +260,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Term");
                 });
 
+            modelBuilder.Entity("Core.Entities.PaymentInstallment", b =>
+                {
+                    b.HasOne("Core.Entities.Installment", "Installment")
+                        .WithOne("PaymentInstallment")
+                        .HasForeignKey("Core.Entities.PaymentInstallment", "InstallmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Installment");
+                });
+
             modelBuilder.Entity("Core.Entities.ApprovedLoan", b =>
                 {
                     b.Navigation("Installaments");
@@ -278,15 +281,16 @@ namespace Infrastructure.Migrations
                     b.Navigation("Loans");
                 });
 
+            modelBuilder.Entity("Core.Entities.Installment", b =>
+                {
+                    b.Navigation("PaymentInstallment")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Core.Entities.LoanRequest", b =>
                 {
                     b.Navigation("ApprovedLoan")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Core.Entities.PaymentInstallment", b =>
-                {
-                    b.Navigation("Installments");
                 });
 
             modelBuilder.Entity("Core.Entities.TermIR", b =>

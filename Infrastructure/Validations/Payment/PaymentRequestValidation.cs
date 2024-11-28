@@ -3,16 +3,16 @@ using FluentValidation;
 
 namespace Infrastructure.Validations.Payment
 {
-    public class PaymentRequestValidation : AbstractValidator<PaymentRequestDto>
+    public class PaymentRequestValidation : AbstractValidator<PaymentRequest>
     {
         public PaymentRequestValidation()
         {
-            RuleFor(x => x.LoanApprovedId)
+            RuleFor(x => x.ApprovedLoanId)
                 .NotEmpty();
-            RuleFor(x => x.NumberOfInstallmentsToPay)
+            RuleFor(x => x.InstallmentIds)
                 .NotEmpty()
                 .WithMessage("Debe ingresa uno o mas Id's de las cuotas")
-                .WithErrorCode("INVALID_NUMBER");
+                .WithErrorCode("INVALID_INSTALLMENTIDS");
         }
     }
 }

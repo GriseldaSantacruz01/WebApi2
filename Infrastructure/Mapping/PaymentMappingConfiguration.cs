@@ -7,7 +7,9 @@ namespace Infrastructure.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<Installment, PaymentInstallment>();
+            config.NewConfig<Installment, PaymentInstallment>()
+                .Map(dest => dest.InstallmentAmount, src => src.InstallmentTotal)
+                .Map(dest => dest.NextDueDate, src => DateTime.UtcNow);
         }
     }
 }

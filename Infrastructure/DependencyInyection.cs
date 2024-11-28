@@ -46,7 +46,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IValidator<SimulateInstallment>, SimulateInstallmentValidation>();
         services.AddScoped<IValidator<CreateLoanRequest>, CreateLoanRequestValidation>();
-        services.AddScoped<IValidator<PaymentRequestDto>, PaymentRequestValidation>();
+        services.AddScoped<IValidator<PaymentRequest>, PaymentRequestValidation>();
         return services;
     }
 

@@ -11,18 +11,18 @@ namespace WebApi2.Controllers
     public class PaymentInstallmentController : BaseApiController
     {
         private readonly IPaymentService _paymentInstallamenService;
-        private readonly IValidator<PaymentRequestDto> _paymentRequestValidator;
+        private readonly IValidator<PaymentRequest> _paymentRequestValidator;
 
-        public PaymentInstallmentController (IPaymentService paymentInstallamentService, IValidator<PaymentRequestDto> paymentValidator)
+        public PaymentInstallmentController (IPaymentService paymentInstallamentService, IValidator<PaymentRequest> paymentValidator)
         {
             _paymentInstallamenService = paymentInstallamentService;
             _paymentRequestValidator = paymentValidator;
         }
 
         [HttpPost("api/Pay")]
-        public async Task<IActionResult> PayInstallments([FromBody] PaymentRequestDto request)
+        public async Task<IActionResult> PayInstallments([FromBody] PaymentRequest request)
         {
-            var paymentInstallment = await _paymentInstallamenService.PayInstallmentsAsync(request);
+            var paymentInstallment = await _paymentInstallamenService.PayInstallmentsAsync(request.ApprovedLoanId, request.InstallmentIds);
             var validation = await _paymentRequestValidator.ValidateAsync(request);
             if (!validation.IsValid) return BadRequest(validation.Errors);
 

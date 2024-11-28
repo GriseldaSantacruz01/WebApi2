@@ -27,22 +27,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentInstallments",
-                columns: table => new
-                {
-                    PaymentInstallmentId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    NextDueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    NumberOfInstallmentsToPay = table.Column<int>(type: "integer", nullable: false),
-                    InstallmentTotal = table.Column<decimal>(type: "numeric", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PaymentInstallments", x => x.PaymentInstallmentId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TermIRs",
                 columns: table => new
                 {
@@ -132,8 +116,7 @@ namespace Infrastructure.Migrations
                     InstallmentStatus = table.Column<string>(type: "text", nullable: false),
                     DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ApprovedLoanId = table.Column<int>(type: "integer", nullable: false),
-                    PaymentInstallmentId = table.Column<int>(type: "integer", nullable: true)
+                    ApprovedLoanId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -144,11 +127,28 @@ namespace Infrastructure.Migrations
                         principalTable: "ApprovedLoans",
                         principalColumn: "ApprovedLoanId",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PaymentInstallments",
+                columns: table => new
+                {
+                    PaymentInstallmentId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    NextDueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    InstallmentId = table.Column<int>(type: "integer", nullable: false),
+                    InstallmentAmount = table.Column<decimal>(type: "numeric", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PaymentInstallments", x => x.PaymentInstallmentId);
                     table.ForeignKey(
-                        name: "FK_Installments_PaymentInstallments_PaymentInstallmentId",
-                        column: x => x.PaymentInstallmentId,
-                        principalTable: "PaymentInstallments",
-                        principalColumn: "PaymentInstallmentId");
+                        name: "FK_PaymentInstallments_Installments_InstallmentId",
+                        column: x => x.InstallmentId,
+                        principalTable: "Installments",
+                        principalColumn: "InstallmentId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -168,11 +168,6 @@ namespace Infrastructure.Migrations
                 column: "ApprovedLoanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Installments_PaymentInstallmentId",
-                table: "Installments",
-                column: "PaymentInstallmentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_LoanRequests_CustomerId",
                 table: "LoanRequests",
                 column: "CustomerId");
@@ -181,19 +176,25 @@ namespace Infrastructure.Migrations
                 name: "IX_LoanRequests_Months",
                 table: "LoanRequests",
                 column: "Months");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentInstallments_InstallmentId",
+                table: "PaymentInstallments",
+                column: "InstallmentId",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "PaymentInstallments");
+
+            migrationBuilder.DropTable(
                 name: "Installments");
 
             migrationBuilder.DropTable(
                 name: "ApprovedLoans");
-
-            migrationBuilder.DropTable(
-                name: "PaymentInstallments");
 
             migrationBuilder.DropTable(
                 name: "LoanRequests");

@@ -1,10 +1,8 @@
 ﻿
-using Core.DTOs.PaymentInstallment;
 using Core.Entities;
 using Core.Interfaces.Repositories;
 using Core.Interfaces.Service;
 using Mapster;
-using System.Linq;
 
 namespace Infrastructure.Service
 {
@@ -15,7 +13,7 @@ namespace Infrastructure.Service
         private readonly IGeneralService _generalService;
         private readonly IApprovedLoanRepository _approvedLoanRepository;
 
-        public PaymentService
+        public PaymentService 
             (IInstallmentRepository installmentRepository,
             IPaymentInstallmentRepository paymentInstallmentRepository,
             IGeneralService generalService,
@@ -26,47 +24,37 @@ namespace Infrastructure.Service
             _generalService = generalService;
             _approvedLoanRepository = approvedLoanRepository;
         }
-        public async Task<string> PayInstallmentsAsync(PaymentRequestDto paymentRequest)
+        public async Task<string> PayInstallmentsAsync(int loanApprovedId, int[] installmentIds)
         {
-            if (paymentRequest.NumberOfInstallmentsToPay <= 0)
-                throw new ArgumentException("El número de cuotas a pagar debe ser mayor a 0.");
+            var installments = await _installmentRepository.GetInstallmentsByApprovedLoanId(loanApprovedId);
+            var unpaidInstallments = installments
+                .Where(i => i.PaymentDate == null).ToList();
+            var installmentsToPay = unpaidInstallments
+                .Where(i => installmentIds.Contains(i.InstallmentId)).ToList();
+            decimal amount = 0;
 
-            var installments = await _installmentRepository.GetInstallmentsByApprovedLoanId(paymentRequest.LoanApprovedId);
-
-            if (!installments.Any())
-                throw new InvalidOperationException("No hay cuotas pendientes para este préstamo aprobado.");
-
-            if (installments.Count < paymentRequest.NumberOfInstallmentsToPay)
-                throw new InvalidOperationException($"Solo hay {installments.Count} cuotas pendientes para pagar.");
-
-            var installmentsToPay = installments
-                .OrderBy(i => i.DueDate)
-                .Take(paymentRequest.NumberOfInstallmentsToPay)
-                .ToList();
-
-            var totalAmount = installmentsToPay.Sum(i => i.TotalAmount);
-            var nextInstallment = installments
-                .OrderBy(i => i.DueDate)
-                .FirstOrDefault(i => i.InstallmentStatus != "Pagada");
-
-            var payment = paymentRequest.Adapt<PaymentInstallment>();
-            payment.PaymentDate = DateTime.UtcNow;
-            payment.InstallmentTotal = totalAmount;
-            payment.NextDueDate = nextInstallment!.DueDate;
+            if (installmentsToPay.Count != installmentIds.Length)
+            {
+                return "Error: Algunas cuotas seleccionadas no existen o ya están pagadas.";
+            }
 
             foreach (var installment in installmentsToPay)
             {
-                installment.InstallmentStatus = "Pagada";
-                installment.PaymentInstallmentId = payment.PaymentInstallmentId;
                 installment.PaymentDate = DateTime.UtcNow;
+                installment.InstallmentStatus = "Pagada";
+                var payment = installment.Adapt<PaymentInstallment>();
+                payment.NextDueDate = _generalService.CalculateNextDueDate(installment.DueDate, 1);
+                amount += installment.InstallmentTotal ;
+                await _paymentInstallmentRepository.AddPaymentInstallment(payment);
+
             }
-            await _installmentRepository.UpdateInstallments(installments);
+            var approvedLoan = await _approvedLoanRepository.GetLoanById(loanApprovedId);
+            approvedLoan.PendingAmount -= amount;
 
+            await _approvedLoanRepository.UpdateApprovedLoan(loanApprovedId);
+            await _installmentRepository.UpdateInstallments(installmentsToPay);
 
-            await _paymentInstallmentRepository.AddPaymentInstallment(payment);
-
-            return $"{paymentRequest.NumberOfInstallmentsToPay} cuota(s han sido pagada(s) correctamente";
+            return $"{installmentsToPay.Count} cuota(s) pagada(s) exitosamente.";
         }
-    
     }
 }
