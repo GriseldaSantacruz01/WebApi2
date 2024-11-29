@@ -42,7 +42,7 @@ namespace WebApi2.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpPost("api/Approval/{loanId}")]
 
         public async Task<IActionResult> AproveLoan([FromRoute]int loanId)
@@ -54,7 +54,7 @@ namespace WebApi2.Controllers
             return Ok(await _loanRequestService.AproveLoan(loanId));
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpPost("api/Rejection/{loanId}")]
 
         public async Task<IActionResult> RejectedLoan([FromRoute]int loanId, [FromQuery]string reason)

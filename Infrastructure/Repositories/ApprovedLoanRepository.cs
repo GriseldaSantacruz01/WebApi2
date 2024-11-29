@@ -24,4 +24,10 @@ public class ApprovedLoanRepository : IApprovedLoanRepository
         var loan = await _context.ApprovedLoans.FirstOrDefaultAsync(x => x.ApprovedLoanId == id);
         return loan! ;
     }
+    public async Task UpdateApprovedLoan(ApprovedLoan approvedLoan)
+    {
+        _context.ApprovedLoans.Update(approvedLoan);
+        await _context.SaveChangesAsync();
+    }
+
 }

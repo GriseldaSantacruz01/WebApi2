@@ -176,6 +176,9 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PaymentInstallmentId"));
 
+                    b.Property<int>("ApprovedLoanId")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("InstallmentTotal")
                         .HasColumnType("numeric");
 
@@ -189,6 +192,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("PaymentInstallmentId");
+
+                    b.HasIndex("ApprovedLoanId")
+                        .IsUnique();
 
                     b.ToTable("PaymentInstallments");
                 });
@@ -268,9 +274,22 @@ namespace Infrastructure.Migrations
                     b.Navigation("Term");
                 });
 
+            modelBuilder.Entity("Core.Entities.PaymentInstallment", b =>
+                {
+                    b.HasOne("Core.Entities.ApprovedLoan", "ApprovedLoan")
+                        .WithOne("PaymentInstallment")
+                        .HasForeignKey("Core.Entities.PaymentInstallment", "ApprovedLoanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApprovedLoan");
+                });
+
             modelBuilder.Entity("Core.Entities.ApprovedLoan", b =>
                 {
                     b.Navigation("Installaments");
+
+                    b.Navigation("PaymentInstallment");
                 });
 
             modelBuilder.Entity("Core.Entities.Customer", b =>

@@ -14,6 +14,8 @@ namespace Core.Entities
 
         public int NumberOfInstallmentsToPay { get; set; }
         public decimal InstallmentTotal { get; set; }
+        public int ApprovedLoanId { get; set; }
+        public ApprovedLoan ApprovedLoan { get; set; } = null!;
         public List<Installment> Installments { get; set; } = null!;
     }
 }

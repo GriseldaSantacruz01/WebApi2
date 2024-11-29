@@ -13,5 +13,9 @@ public class PaymentInstallamentConfiguration : IEntityTypeConfiguration<Payment
             .HasMany(p => p.Installments)
             .WithOne(i => i.PaymentInstallment)
             .HasForeignKey(i => i.PaymentInstallmentId);
+        entity
+            .HasOne(p => p.ApprovedLoan)
+            .WithOne(a => a.PaymentInstallment)
+            .HasForeignKey<PaymentInstallment>(p => p.ApprovedLoanId);
     }
 }

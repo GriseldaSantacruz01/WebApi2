@@ -12,15 +12,18 @@ namespace Infrastructure.Service
         private readonly IInstallmentRepository _installmentRepository;
         private readonly IPaymentInstallmentRepository _paymentInstallmentRepository;
         private readonly IApprovedLoanRepository _approvedLoanRepository;
+        private readonly IGeneralService _generalService;
 
         public PaymentService 
             (IInstallmentRepository installmentRepository,
             IPaymentInstallmentRepository paymentInstallmentRepository,
-            IApprovedLoanRepository approvedLoanRepository)
+            IApprovedLoanRepository approvedLoanRepository,
+            IGeneralService generalService)
         {
             _installmentRepository = installmentRepository;
             _paymentInstallmentRepository = paymentInstallmentRepository;
             _approvedLoanRepository = approvedLoanRepository;
+            _generalService = generalService;
         }
         public async Task<string> PayInstallmentsAsync(PaymentDTO paymentDTO)
         {
@@ -39,27 +42,26 @@ namespace Infrastructure.Service
             .OrderBy(i => i.DueDate)
                 .Take(paymentDTO.NumberOfInstallmentsToPay)
                 .ToList();
-
-            var totalAmount = installmentsToPay.Sum(i => i.InstallmentTotal);
             var nextInstallment = installments
-                .OrderBy(i => i.DueDate)
-                .FirstOrDefault(i => i.InstallmentStatus != "Pagada");
+                .FirstOrDefault();
 
             var payment = paymentDTO.Adapt<PaymentInstallment>();
             payment.PaymentDate = DateTime.UtcNow;
-            payment.InstallmentTotal = totalAmount;
-            payment.NextDueDate = nextInstallment!.DueDate;
-            await _paymentInstallmentRepository.AddPaymentInstallment(payment);
+            payment.NextDueDate = _generalService.CalculateNextDueDate(nextInstallment!.DueDate, paymentDTO.NumberOfInstallmentsToPay);
+            payment.InstallmentTotal = nextInstallment.InstallmentTotal * paymentDTO.NumberOfInstallmentsToPay;
+            payment.ApprovedLoanId = paymentDTO.ApprovedLoanId;
+           payment =  await _paymentInstallmentRepository.AddPaymentInstallment(payment);
 
             foreach (var installment in installmentsToPay)
             {
                 installment.InstallmentStatus = "Pagada";
                 installment.PaymentInstallmentId = payment.PaymentInstallmentId;
                 installment.PaymentDate = DateTime.UtcNow;
+                await _installmentRepository.UpdateInstallments(installment);
             }
-            await _installmentRepository.UpdateInstallments(installments);
             var approvedLoan = await _approvedLoanRepository.GetLoanById(paymentDTO.ApprovedLoanId);
-            approvedLoan.PendingAmount -= totalAmount;
+            approvedLoan.PendingAmount -= payment.InstallmentTotal;
+            await _approvedLoanRepository.UpdateApprovedLoan(approvedLoan);
 
             return $"{paymentDTO.NumberOfInstallmentsToPay} cuota(s han sido pagada(s) correctamente";
         }

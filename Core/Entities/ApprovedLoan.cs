@@ -11,6 +11,7 @@
 
         public Customer Customer { get; set; } = null!;
         public int CustomerId { get; set; }
+        public PaymentInstallment? PaymentInstallment { get; set; } 
         public List<Installment> Installaments { get; set; } = null!;
         public LoanRequest Loan { get; set; } = null!;
         public int Months {  get; set; }

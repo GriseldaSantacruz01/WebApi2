@@ -13,9 +13,9 @@ namespace Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task UpdateInstallments(List<Installment> installments)
+        public async Task UpdateInstallments(Installment installments)
         {
-            _context.Installments.UpdateRange(installments);
+            _context.Installments.Update(installments);
             await _context.SaveChangesAsync();
         }
         public async Task AddInstallment(Installment installment)

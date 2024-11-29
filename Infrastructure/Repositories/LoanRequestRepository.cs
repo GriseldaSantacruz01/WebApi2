@@ -22,7 +22,8 @@ public class LoanRequestRepository : ILoanRequestRepository
 
     public async Task<LoanRequest> GetLoanRequestById(int id)
     {
-        var loan = await _context.LoanRequests.FindAsync(id);
+        var loan = await _context.LoanRequests
+            .FirstOrDefaultAsync(x => x.LoanId == id && x.RequestStatus == "Pendiente");
         return loan!;
     }
 

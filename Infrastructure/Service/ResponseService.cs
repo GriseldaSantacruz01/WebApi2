@@ -28,13 +28,13 @@ namespace Infrastructure.Service
                 return new Response
                 {
                     Code = -1,
-                    Message = "No se ha encontrado el prestamo"
+                    Message = "No se ha encontrado el prestamo aprobado"
                 };
             }
             return new Response
             {
                 Code = 1,
-                Message = "Se ha encontrado correctamente el prestamo"
+                Message = "Se ha encontrado correctamente el prestamo aprobado"
             };
         }
 
@@ -82,13 +82,13 @@ namespace Infrastructure.Service
                 return new Response
                 {
                     Code = -1,
-                    Message = "No se ha encontrado el prestamo"
+                    Message = "No se ha encontrado el prestamo pendiente"
                 };
             }
             return new Response
             {
                 Code = 1,
-                Message = "Se ha encontrado correctamente el prestamo"
+                Message = "Se ha encontrado correctamente el prestamo pendiente"
             };
         }
 

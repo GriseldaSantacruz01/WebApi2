@@ -18,7 +18,7 @@ namespace WebApi2.Controllers
             _responseService = responseService;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet("api/GetApprovedLoanDetails/{loanId}")]
         public async Task<IActionResult> GetLoanDetailed([FromRoute]int loanId)
         {

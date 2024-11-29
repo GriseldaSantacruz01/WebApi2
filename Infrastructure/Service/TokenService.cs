@@ -10,6 +10,7 @@ public class TokenService : ITokenService
 
     public string GenerateToken(string name, string rol)
     {
+        rol = rol.ToLower();
         var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Name, name),
