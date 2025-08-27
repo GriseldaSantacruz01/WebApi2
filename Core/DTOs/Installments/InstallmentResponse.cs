@@ -13,6 +13,5 @@ namespace Core.DTOs.Installments
         public string InstallmentStatus { get; set; } = string.Empty;
         public DateTime DueDate { get; set; }
         public DateTime? PaymentDate { get; set; }
-
     }
 }

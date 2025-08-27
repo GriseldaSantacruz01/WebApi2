@@ -1,6 +1,6 @@
 ﻿using Core.Interfaces.Service;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Controllers;
+using WebApi2.Controllers;
 
 namespace WebApi2.Controllers
 {
@@ -12,7 +12,7 @@ namespace WebApi2.Controllers
             _tokenService = tokenService;
         }
 
-        [HttpGet("/GenerateToken")]
+        [HttpGet("api/GenerateToken")]
         public IActionResult GenerateToken ([FromQuery]string name, [FromQuery]string rol)
         {
             return Ok(_tokenService.GenerateToken(name, rol));

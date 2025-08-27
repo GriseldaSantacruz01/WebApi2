@@ -57,15 +57,16 @@ public class LoanRequestService : ILoanRequestService
 
 
 
-    public async Task<string> AproveLoan(int loanId, float interestRate)
+    public async Task<string> AproveLoan(int loanId)
     {
         var loanRequest = await _loanRequestRepository.GetLoanRequestById(loanId);
+        var term = await _loanRequestRepository.GetByMonths(loanRequest.Months);
 
         loanRequest.RequestStatus = "Aprobado";
 
         var approvedLoan = loanRequest.Adapt<ApprovedLoan>();
-        approvedLoan.InterestRate = interestRate;
-        approvedLoan.PendingAmount = Math.Round(_generalService.CalculateTotalAmount(interestRate, approvedLoan.Amount, approvedLoan.Months));
+        approvedLoan.InterestRate = term.InterestRate;
+        approvedLoan.PendingAmount = Math.Round(_generalService.CalculateTotalAmount(term.InterestRate, approvedLoan.Amount, approvedLoan.Months));
 
         var installments = _generalService.GenerateInstallments(approvedLoan.ApprovalDate, approvedLoan.Amount, approvedLoan.InterestRate, approvedLoan.Months);
         await _approvedLoanRepository.AddApprovedLoan(approvedLoan);

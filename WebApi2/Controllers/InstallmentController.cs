@@ -5,7 +5,6 @@ using Core.Interfaces.Service;
 using FluentValidation;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Controllers;
 
 namespace WebApi2.Controllers
 {
@@ -24,7 +23,7 @@ namespace WebApi2.Controllers
             _responseService = responseService;
             _simulateInstallmentValidator = simulateInstallmentValidator;
         }
-        [HttpPost("/Simulator")]
+        [HttpPost("api/Simulator")]
         public async Task<IActionResult> SimulateInstallment([FromBody] SimulateInstallment simulateInstallment)
         {
             var validation = await _simulateInstallmentValidator.ValidateAsync(simulateInstallment);
@@ -36,8 +35,8 @@ namespace WebApi2.Controllers
             return Ok(await _installamentService.SimulateInstallment(simulateInstallment));
         }
 
-        [HttpGet("/GetInstallmentsByStatus/{approvedLoanId}")]
-        public async Task<IActionResult> FilterByStatus([FromRoute]int approvedLoanId, [FromQuery]string filter)
+        [HttpGet("api/GetInstallmentsByStatus/{approvedLoanId}")]
+        public async Task<IActionResult> FilterByStatus([FromRoute]int approvedLoanId, [FromQuery]string filter = "all")
         {
             var approvedLoan = await _responseService.VerifyLoanApprovedId(approvedLoanId);
             if (approvedLoan.Code == -1 ) return NotFound(approvedLoan.Message);
@@ -45,12 +44,11 @@ namespace WebApi2.Controllers
             return Ok(installments);
         }
 
-        [HttpGet("/GetDelayedInstallments/{approvedLoanId}")]
-        public async Task<IActionResult> DelayInstallmentList(int approvedLoanId)
+        [HttpGet("api/GetDelayedInstallments")]
+        public async Task<IActionResult> DelayInstallmentList()
         {
-            var verify = await _responseService.VerifyLoanApprovedId(approvedLoanId);
-            if (verify.Code == -1) return NotFound(verify.Message);
-            return Ok(await _installamentService.DelayInstallmentList(approvedLoanId));
+            
+            return Ok(await _installamentService.DelayInstallmentList());
         }
     }
 }

@@ -7,6 +7,6 @@ namespace Core.Interfaces.Repositories
         Task UpdateInstallments(List<Installment> installments);
         Task<List<Installment>> GetInstallmentsByApprovedLoanId(int loanId);
         Task AddInstallment(Installment installment);
-        Task<List<Installment>> GetDelayedInstallmentsWithLoanAndCustomer(int approvedLoanId);    
+        Task<List<Installment>> GetDelayedInstallmentsWithLoanAndCustomer();
     }
 }

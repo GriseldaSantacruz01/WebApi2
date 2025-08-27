@@ -58,9 +58,9 @@ public class InstallmentService : IInstallmentService
         return await _installmentRepository.GetInstallmentsByApprovedLoanId(id);
     }
 
-    public async Task<List<PastDueInstallmentResponse>> DelayInstallmentList(int approvedLoanId)
+    public async Task<List<PastDueInstallmentResponse>> DelayInstallmentList()
     {
-        var installments = await _installmentRepository.GetDelayedInstallmentsWithLoanAndCustomer(approvedLoanId);
+        var installments = await _installmentRepository.GetDelayedInstallmentsWithLoanAndCustomer();
 
         var result = installments.Adapt<List<PastDueInstallmentResponse>>();
 

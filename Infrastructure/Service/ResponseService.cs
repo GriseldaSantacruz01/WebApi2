@@ -84,7 +84,7 @@ namespace Infrastructure.Service
 
         public async Task<Response> VerifyLoanId(int loanId)
         {
-            var entity = await _loanRequestRepository.GetLoanRequestByIdAsync(loanId);
+            var entity = await _loanRequestRepository.GetLoanRequestById(loanId);
             if (entity == null)
             {
                 return new Response

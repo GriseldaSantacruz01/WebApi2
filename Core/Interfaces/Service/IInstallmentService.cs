@@ -8,7 +8,7 @@ public interface IInstallmentService
     Task<SimulateInstallmentResponse> SimulateInstallment(SimulateInstallment simulateInstallment);
     Task<List<Installment>> GetInstallmentsByApprovedLoanId(int id);
     Task<List<InstallmentResponse>> FilterByStatus(int approvedLoanId, string filter);
-    Task<List<PastDueInstallmentResponse>> DelayInstallmentList(int approvedLoanId);
+    Task<List<PastDueInstallmentResponse>> DelayInstallmentList();
 
 
 }

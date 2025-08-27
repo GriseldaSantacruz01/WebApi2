@@ -4,7 +4,7 @@ using Core.Interfaces.Service;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Controllers;
+using WebApi2.Controllers;
 
 namespace WebApi2.Controllers
 {
@@ -19,7 +19,7 @@ namespace WebApi2.Controllers
             _paymentRequestValidator = paymentValidator;
         }
 
-        [HttpPost("pay-installments")]
+        [HttpPost("api/Pay")]
         public async Task<IActionResult> PayInstallments([FromBody] PaymentRequest request)
         {
             var paymentInstallment = await _paymentInstallamenService.PayInstallmentsAsync(request.ApprovedLoanId, request.InstallmentIds);

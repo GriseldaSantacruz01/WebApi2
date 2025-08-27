@@ -5,7 +5,6 @@ using Core.Interfaces.Service;
 using Infrastructure.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Controllers;
 
 namespace WebApi2.Controllers
 {
@@ -20,7 +19,7 @@ namespace WebApi2.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet("GetApprovedLoanDetails/{loanId}")]
+        [HttpGet("api/GetApprovedLoanDetails/{loanId}")]
         public async Task<IActionResult> GetLoanDetailed([FromRoute]int loanId)
         {
             var loanApproved = await _responseService.VerifyLoanApprovedId(loanId);

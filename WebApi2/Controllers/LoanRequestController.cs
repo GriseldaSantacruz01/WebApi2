@@ -6,7 +6,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Eventing.Reader;
-using WebApi.Controllers;
+using WebApi2.Controllers;
 
 namespace WebApi2.Controllers
 {
@@ -15,24 +15,18 @@ namespace WebApi2.Controllers
         private readonly IResponseService _responseService;
         private readonly ILoanRequestService _loanRequestService;
         private readonly IValidator<CreateLoanRequest> _loanValidator;
-        private readonly IValidator<ApprovedRequest> _approveValidator;
-        private readonly IValidator<RejectedRequest> _rejectedValidator;
         public LoanRequestController
             (ILoanRequestService loanRequestService, 
             IResponseService responseService,
-            IValidator<CreateLoanRequest> loanValidator,
-            IValidator<ApprovedRequest> approveValidator,
-            IValidator<RejectedRequest> rejectedValidator)
+            IValidator<CreateLoanRequest> loanValidator)
         {
             _responseService = responseService;
             _loanRequestService = loanRequestService;
             _loanValidator = loanValidator;
-            _approveValidator = approveValidator;
-            _rejectedValidator = rejectedValidator;
         }
 
 
-        [HttpPost("/CreateLoanRequest")]
+        [HttpPost("api/CreateLoanRequest")]
         public async Task<IActionResult> CreateLoanRequest([FromBody]CreateLoanRequest createLoanRequest)
         {
             var validation = await _loanValidator.ValidateAsync(createLoanRequest);
@@ -49,33 +43,26 @@ namespace WebApi2.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("/Approval/{loanId}")]
+        [HttpPost("api/Approval/{loanId}")]
 
-        public async Task<IActionResult> AproveLoan(ApprovedRequest approvedRequest)
+        public async Task<IActionResult> AproveLoan([FromRoute]int loanId)
         {
-            var validation = await _approveValidator.ValidateAsync(approvedRequest);
-            if (!validation.IsValid) return BadRequest(validation.Errors);
-
-            var loan = await _responseService.VerifyLoanId(approvedRequest.LoanId);
+            var loan = await _responseService.VerifyLoanId(loanId);
             if (loan.Code == -1) return NotFound(loan.Message);
 
 
-            return Ok(await _loanRequestService.AproveLoan(approvedRequest.LoanId, approvedRequest.InterestRate));
+            return Ok(await _loanRequestService.AproveLoan(loanId));
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("/Rejection")]
+        [HttpPost("api/Rejection/{loanId}")]
 
-        public async Task<IActionResult> RejectedLoan(RejectedRequest rejectedRequest)
+        public async Task<IActionResult> RejectedLoan([FromRoute]int loanId, [FromQuery]string reason)
         {
-            var validation = await _rejectedValidator.ValidateAsync(rejectedRequest);
-            if (!validation.IsValid) return BadRequest(validation.Errors);
-
-            var loan = await _responseService.VerifyLoanId(rejectedRequest.LoanId);
+            var loan = await _responseService.VerifyLoanId(loanId);
             if (loan.Code == -1) return NotFound(loan.Message);
 
-
-            return Ok(await _loanRequestService.RejectedLoan(rejectedRequest.LoanId, rejectedRequest.Reason));
+            return Ok(await _loanRequestService.RejectedLoan(loanId, reason));
         }
 
     }

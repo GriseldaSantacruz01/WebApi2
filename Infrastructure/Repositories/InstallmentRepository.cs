@@ -38,10 +38,10 @@ namespace Infrastructure.Repositories
                 .OrderBy(i => i.DueDate) 
                 .ToListAsync();
         }
-        public async Task<List<Installment>> GetDelayedInstallmentsWithLoanAndCustomer(int approvedLoanId)
+        public async Task<List<Installment>> GetDelayedInstallmentsWithLoanAndCustomer()
         {
             return await _context.Installments
-                .Where(i => i.ApprovedLoanId == approvedLoanId && i.DueDate < DateTime.UtcNow && !i.PaymentDate.HasValue)
+                .Where(i => i.DueDate < DateTime.UtcNow && !i.PaymentDate.HasValue)
                 .Include(i => i.ApprovedLoan)
                 .ThenInclude(al => al.Customer)
                 .ToListAsync();

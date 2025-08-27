@@ -25,9 +25,6 @@ namespace Infrastructure.Mapping
             config.NewConfig<Installment, InstallmentResponse>();
 
             config.NewConfig<Installment, PastDueInstallmentResponse>()
-            .Map(dest => dest.InstallmentId, src => src.InstallmentId)
-            .Map(dest => dest.ApprovedLoanId, src => src.ApprovedLoanId)
-            .Map(dest => dest.DueDate, src => src.DueDate)
             .Map(dest => dest.DaysDelayed, src => (DateTime.UtcNow - src.DueDate).Days)
             .Map(dest => dest.PendingAmount, src => src.ApprovedLoan.PendingAmount)
             .Map(dest => dest.CustomerId, src => src.ApprovedLoan.CustomerId)
